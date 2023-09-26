@@ -108,7 +108,9 @@ function App() {
     ) {
       setMessage("Loading...");
       setLoading(true);
-      getPokemonData(allPokemons.length).then((newPokemons) => {
+      // the getPokemonData method is adding one, because it was duplicating the data
+      // the array starts at zero, because of that we need to add one
+      getPokemonData(allPokemons.length + 1).then((newPokemons) => {
         setAllPokemons([...allPokemons, ...newPokemons]);
         setLoading(false);
       });
@@ -120,7 +122,7 @@ function App() {
       <header>
         <div className="buttons">
           <div className="favorites">
-            <a href="">Favorites</a>
+            <a href="">Favorites</a> 
           </div>
           <div className="compare">
             <a href="" className="text-3xl">Compare</a>
@@ -144,21 +146,22 @@ function App() {
         </div>
         <div className="list-pokemon">
           <p>pokémon list with infinite scroll</p>
+          <p>Total Pokemons: {allPokemons.length}</p>
           <ul>
             {allPokemons.map((pokemon, index) => (
               <li className="card" key={"num" + index}>
-                <img src={pokemon.sprite} alt={pokemon.name} />
                 <h1 className="pokemonName"> {pokemon.name} </h1>
-                {console.log(pokemon)}
+                {console.log('List of pokemons:', pokemon, 'and his index is ', index)}
                 {pokemon.stats.map((attribute, index) => <p key={"num" + index}>{attribute.base_stat} {attribute.stat.name}</p>)}
+                {console.log(
+                  'innerHeight: ', window.innerHeight, 
+                  'scrollTop: ', document.documentElement.scrollTop, 
+                  'soma: ', window.innerHeight + document.documentElement.scrollTop,
+                  'offsetHeight: ', document.documentElement.offsetHeight)}
               </li>
             ))}
             {isLoading && <h1 className="pokemonName">{message}</h1>}
           </ul>
-        </div>
-        <div className="search-result">
-          <p>Search Result: {(searchResult.length !== 0 && searchResult) ? searchResult.name : 'empty result'}</p>
-          {searchResult.length !== 0 ? console.log('the search result is', searchResult) : console.log('empty result state')}
         </div>
       </section>
       <footer></footer>
