@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 
 // declaring constants
-const POKE_URL = 'https://pokeapi.co/apis/v2/pokemon/'
+const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/'
 
 // App component
 function App() {
@@ -53,19 +53,14 @@ function App() {
 
     // populate the array with promises
     // this time, we make the requests for the api based on the id from the pokemon
+    // the try-catch block is insde the foreach, to verify if the first request is succeed or not
+    // if not, throw an error and stops the loop, passing the message to the statee
     for (let i = length; i < length + 20; i++) {
-      // variable to store the promise
-      
       try {
-        // separate in variables the steps, to better readability 
-        let promise = (await fetch(POKE_URL + `${i}`)).json()
-
         // push into the state array
-        promiseArray.push(promise)
-
+        promiseArray.push((await fetch(POKE_URL + `${i}`)).json())
       // error caching
       } catch(error) {
-        console.log(error.message)
         setMessage(error.message)
         break
       }
@@ -80,7 +75,6 @@ function App() {
       return {
         name: pokemon.name,
         sprite: pokemon.sprites.front_default,
-        // accessing the property with hiphen
         artwork: pokemon.sprites.other['official-artwork'].front_default,
         stats: pokemon.stats
       }
@@ -91,7 +85,7 @@ function App() {
   // defining the function to be passed into the useEffect hook
   const getPokemonsByScroll = () => {
 
-    // fetching the data and updating the state
+    // fetching the data and updating the states
     const fetchData = async () => {
       setLoading(true)
       setMessage("loading")
