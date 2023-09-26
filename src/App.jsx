@@ -70,6 +70,8 @@ function App() {
       return {
         name: pokemon.name,
         sprite: pokemon.sprites.front_default,
+        // accessing the property with hiphen
+        artwork: pokemon.sprites.other['official-artwork'].front_default,
         stats: pokemon.stats
       }
     })
@@ -150,7 +152,8 @@ function App() {
           <ul>
             {allPokemons.map((pokemon, index) => (
               <li className="card" key={"num" + index}>
-                <h1 className="pokemonName"> {pokemon.name} </h1>
+                <h1 className="pokemonName"> {pokemon.name}</h1>
+                <img src={pokemon.artwork} alt={pokemon.name} />
                 {console.log('List of pokemons:', pokemon, 'and his index is ', index)}
                 {pokemon.stats.map((attribute, index) => <p key={"num" + index}>{attribute.base_stat} {attribute.stat.name}</p>)}
                 {console.log(
