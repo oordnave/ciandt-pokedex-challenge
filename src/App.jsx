@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react'
 
 // declaring constants
-const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/?limit=20'
-const POKE_URL_SEARCH = 'https://pokeapi.co/api/v2/pokemon/'
+const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/'
 
 // App component
 function App() {
@@ -43,7 +42,7 @@ function App() {
       console.log('pokemon found in the state: ', result)
     } else {
       console.log('pokémon not found in stored cache, making request for the api');
-      getPokemons(POKE_URL_SEARCH, true, search)
+      getPokemons(POKE_URL, true, search)
     }
   }
 
@@ -51,30 +50,34 @@ function App() {
   const getPokemonData = async (length) => {
     // defining an empty array to store the promises
     const promiseArray = [];
+    
+    try {
+      // populate the array with promises
+      // this time, we make the requests for the api based on the id from the pokemon
+      for (let i = length; i < length + 20; i++) {
+        // pushing the data to update the array for each offset
+        promiseArray.push(
+          (await fetch(POKE_URL + `${i}`)).json()
+        )
 
-    // populate the array with promises
-    // this time, we make the requests for the api based on the id from the pokemon
-    for (let i = length; i < length + 20; i++) {
-      // pushing the data to update the array for each offset
-      promiseArray.push(
-        (await fetch(POKE_URL_SEARCH + `${i}`)).json()
-      )
-
-    }
-
-    // wait for the promise array to resolve
-    const allPokemonData = await Promise.all(promiseArray);
-
-    // return the data from each pokemon 
-    return allPokemonData.map(pokemon => {
-      return {
-        name: pokemon.name,
-        sprite: pokemon.sprites.front_default,
-        // accessing the property with hiphen
-        artwork: pokemon.sprites.other['official-artwork'].front_default,
-        stats: pokemon.stats
       }
-    })
+
+      // wait for the promise array to resolve
+      const allPokemonData = await Promise.all(promiseArray);
+
+      // return the data from each pokemon 
+      return allPokemonData.map(pokemon => {
+        return {
+          name: pokemon.name,
+          sprite: pokemon.sprites.front_default,
+          // accessing the property with hiphen
+          artwork: pokemon.sprites.other['official-artwork'].front_default,
+          stats: pokemon.stats
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
 
   }
 
