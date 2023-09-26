@@ -47,7 +47,7 @@ function App() {
   }
 
   // get all the pokemon data
-  const getPokemonData = async (length) => {
+  const getAllPokemons = async (length) => {
     // defining an empty array to store the promises
     const promiseArray = [];
 
@@ -82,6 +82,10 @@ function App() {
 
   }
 
+  // get the pokemon from the search
+
+
+
   // defining the function to be passed into the useEffect hook
   const getPokemonsByScroll = () => {
 
@@ -89,7 +93,7 @@ function App() {
     const fetchData = async () => {
       setLoading(true)
       setMessage("loading")
-      const response = await getPokemonData(1);
+      const response = await getAllPokemons(1);
       setAllPokemons(response)
       setLoading(false)
     }
@@ -116,7 +120,7 @@ function App() {
       setLoading(true);
       // the getPokemonData method is adding one, because it was duplicating the data
       // the array starts at zero, because of that we need to add one
-      getPokemonData(allPokemons.length + 1).then((newPokemons) => {
+      getAllPokemons(allPokemons.length + 1).then((newPokemons) => {
         setAllPokemons([...allPokemons, ...newPokemons]);
         setLoading(false);
       });
