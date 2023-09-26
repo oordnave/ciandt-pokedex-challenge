@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 
 // declaring constants
-const POKE_URL = 'https://pokeapi.co/api/v2'
+const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/?limit=20'
 const POKE_URL_SEARCH = 'https://pokeapi.co/api/v2/pokemon/'
 
 // App component
@@ -11,9 +11,10 @@ function App() {
   // states for all the pokémons
   const [pokemons, setPokemons] = useState([])
 
-  // state for the search query and search result
+  // state for the search query
   const [search, setSearch] = useState('')
 
+  // state for the search result
   const [searchResult, setSearchResult] = useState([])
 
   // handlers
@@ -37,7 +38,9 @@ function App() {
       console.log(result)
     } else {
       console.log('pokémon not found in stored cache');
-
+      getPokemons(POKE_URL_SEARCH, true, search)
+      let teste = searchResult;
+      console.log(teste)
     }
     // let result = pokemons.find(pokemon => pokemon.name === search)
     // console.log(result)
@@ -51,15 +54,22 @@ function App() {
   }
 
   // make the request for the API
-  const getPokemons = () => {
+  // defines the default url as POKE_URL constant
+  const getPokemons = (url = POKE_URL, isSearch = false, term = '') => {
     async function fetchData() {
       try {
         // make the request for the api, with limit of 20
-        const response = await fetch(POKE_URL + "/pokemon/?limit=20")
+        const response = await fetch(url + term.toLowerCase())
+        
+        console.log("url: ", url, "term: ", term)
+
         // convert the data to a json type
         const data = await response.json()
-        // change the state  
-        setPokemons(data.results)
+
+        // if search is false, get pokémon data from start
+        // the concat method was used, because it is the first rule in the react - not mutating directly the data
+        isSearch !== true ? setPokemons(pokemons.concat(data.results)) : setSearchResult(searchResult.concat(data.results))
+
       } catch (err) {
         // error handling
          console.log(err)
@@ -106,6 +116,7 @@ function App() {
             {pokemons.map((pokemon, index) => <li key={index}>{index} {pokemon.name}</li>)}
           </ul>
         </div>
+        {searchResult.length}
       </section>
       <footer></footer>
    </>
