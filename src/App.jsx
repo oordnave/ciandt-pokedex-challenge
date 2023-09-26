@@ -2,20 +2,23 @@
 import { useState, useEffect } from 'react'
 
 // declaring constants
-const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/?limit=20'
-const POKE_URL_SEARCH = 'https://pokeapi.co/api/v2/pokemon/'
+const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/'
 
 // App component
 function App() {
   // states
-  // states for all the pokémons
-  const [pokemons, setPokemons] = useState([])
+  // state for all the pokémons
+  const [allPokemons, setAllPokemons] = useState([])
 
   // state for the search query
   const [search, setSearch] = useState('')
 
   // state for the search result
   const [searchResult, setSearchResult] = useState([])
+
+  // state for the infinite scroll
+  const [message, setMessage] = useState("")
+  const [isLoading, setLoading] = useState(true)
 
   // handlers
   // test handler to reference
@@ -32,65 +35,100 @@ function App() {
     event.preventDefault();
 
     // first, verify in the pokemons state if the pokemon exists
-    let result = pokemons.find(pokemon => pokemon.name.toLowerCase() === search.toLowerCase())
+    let result = allPokemons.find(pokemon => pokemon.name.toLowerCase() === search.toLowerCase())
 
+    // conditionals if result exists, if not search in the API
     if(result) {
       console.log('pokemon found in the state: ', result)
     } else {
       console.log('pokémon not found in stored cache, making request for the api');
-      getPokemons(POKE_URL_SEARCH, true, search)
+      getPokemons(POKE_URL, true, search)
     }
   }
 
-  // make the request for the API
-  // defines the default url as POKE_URL constant
-  const getPokemons = (url = POKE_URL, isSearch = false, term = '') => {
-    async function fetchData() {
+  // get all the pokemon data
+  const getPokemonData = async (length) => {
+    // defining an empty array to store the promises
+    const promiseArray = [];
+
+    // populate the array with promises
+    // this time, we make the requests for the api based on the id from the pokemon
+    // the try-catch block is insde the foreach, to verify if the first request is succeed or not
+    // if not, throw an error and stops the loop, passing the message to the statee
+    for (let i = length; i < length + 20; i++) {
       try {
-        // make the request for the api, with limit of 20
-        const response = await fetch(url + term.toLowerCase())
-        
-        console.log("url: ", url, "term: ", term)
-
-        // convert the data to a json type
-        const data = await response.json()
-
-        console.log('the data is', data);
-
-        // the concat method will be used later, when the user scroll the page
-        if(isSearch) {
-          // update state for the search result
-          setSearchResult(data)
-          // update state for the input
-          setSearch('')
-        } else {
-          // to prevent mutate the array, spread operator was used
-          setPokemons([...data.results])
-        }
-
-      } catch (err) {
-        // change state for the search result, to show error in the search
-        setSearchResult([]);
-
-        // error handling
-         console.log(err)
+        // push into the state array
+        promiseArray.push((await fetch(POKE_URL + `${i}`)).json())
+      // error caching
+      } catch(error) {
+        setMessage(error.message)
+        break
       }
+
     }
 
-    // execute the function
+    // wait for the promise array to resolve
+    const allPokemonData = await Promise.all(promiseArray);
+
+    // return the data from each pokemon 
+    return allPokemonData.map(pokemon => {
+      return {
+        name: pokemon.name,
+        sprite: pokemon.sprites.front_default,
+        artwork: pokemon.sprites.other['official-artwork'].front_default,
+        stats: pokemon.stats
+      }
+    })
+
+  }
+
+  // defining the function to be passed into the useEffect hook
+  const getPokemonsByScroll = () => {
+
+    // fetching the data and updating the states
+    const fetchData = async () => {
+      setLoading(true)
+      setMessage("loading")
+      const response = await getPokemonData(1);
+      setAllPokemons(response)
+      setLoading(false)
+    }
+
     fetchData()
   }
 
   // effects
-  // using to sync with external systems - such as API calls
-  useEffect(getPokemons, [])
+  // using to get the pokemon data
+  useEffect(getPokemonsByScroll, [])
+
+  // Using the onscroll property
+  // To verify the offset from the user, and make the API call while scrolling
+  window.onscroll = () => {
+    if (allPokemons.length > 70) {
+      setMessage("Reached end of the list!!");
+      return;
+    }
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      setMessage("Loading...");
+      setLoading(true);
+      // the getPokemonData method is adding one, because it was duplicating the data
+      // the array starts at zero, because of that we need to add one
+      getPokemonData(allPokemons.length + 1).then((newPokemons) => {
+        setAllPokemons([...allPokemons, ...newPokemons]);
+        setLoading(false);
+      });
+    }
+  };
 
   return (
     <>
       <header>
         <div className="buttons">
           <div className="favorites">
-            <a href="">Favorites</a>
+            <a href="">Favorites</a> 
           </div>
           <div className="compare">
             <a href="" className="text-3xl">Compare</a>
@@ -113,14 +151,24 @@ function App() {
           </button>
         </div>
         <div className="list-pokemon">
-          <p>pokémon list</p>
+          <p>pokémon list with infinite scroll</p>
+          <p>Total Pokemons: {allPokemons.length}</p>
           <ul>
-            {pokemons.map((pokemon, index) => <li key={index}>{index} {pokemon.name}</li>)}
+            {allPokemons.map((pokemon, index) => (
+              <li className="card" key={"num" + index}>
+                <h1 className="pokemonName"> {pokemon.name}</h1>
+                <img src={pokemon.artwork} alt={pokemon.name} />
+                {console.log('List of pokemons:', pokemon, 'and his index is ', index)}
+                {pokemon.stats.map((attribute, index) => <p key={"num" + index}>{attribute.base_stat} {attribute.stat.name}</p>)}
+                {console.log(
+                  'innerHeight: ', window.innerHeight, 
+                  'scrollTop: ', document.documentElement.scrollTop, 
+                  'soma: ', window.innerHeight + document.documentElement.scrollTop,
+                  'offsetHeight: ', document.documentElement.offsetHeight)}
+              </li>
+            ))}
+            {isLoading ? <h1 className="pokemonName">{ message }</h1> : <h1 className="pokemonName">{message}</h1>}
           </ul>
-        </div>
-        <div className="search-result">
-          <p>Search Result: {(searchResult.length !== 0 && searchResult) ? searchResult.name : 'empty result'}</p>
-          {searchResult.length !== 0 ? console.log('the search result is', searchResult) : console.log('empty result state')}
         </div>
       </section>
       <footer></footer>
