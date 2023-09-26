@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 // declaring constants
 const POKE_URL = 'https://pokeapi.co/api/v2'
+const POKE_URL_SEARCH = 'https://pokeapi.co/api/v2/pokemon/'
 
 // App component
 function App() {
@@ -30,12 +31,13 @@ function App() {
     event.preventDefault();
 
     // first, verify in the pokemons state if the pokemon exists
-    let result = pokemons.find(pokemon => pokemon.name === search)
+    let result = pokemons.find(pokemon => pokemon.name.toLowerCase() === search.toLowerCase())
 
     if(result) {
       console.log(result)
     } else {
-      console.log('pokémon not found');
+      console.log('pokémon not found in stored cache');
+
     }
     // let result = pokemons.find(pokemon => pokemon.name === search)
     // console.log(result)
