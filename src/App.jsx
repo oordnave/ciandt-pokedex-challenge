@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react'
 
 // declaring constants
-const POKE_URL = 'https://pokeapi.co/api/v2'
+const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/?limit=20'
+const POKE_URL_SEARCH = 'https://pokeapi.co/api/v2/pokemon/'
 
 // App component
 function App() {
@@ -10,9 +11,10 @@ function App() {
   // states for all the pokémons
   const [pokemons, setPokemons] = useState([])
 
-  // state for the search query and search result
+  // state for the search query
   const [search, setSearch] = useState('')
 
+  // state for the search result
   const [searchResult, setSearchResult] = useState([])
 
   // handlers
@@ -30,35 +32,46 @@ function App() {
     event.preventDefault();
 
     // first, verify in the pokemons state if the pokemon exists
-    let result = pokemons.find(pokemon => pokemon.name === search)
+    let result = pokemons.find(pokemon => pokemon.name.toLowerCase() === search.toLowerCase())
 
     if(result) {
-      console.log(result)
+      console.log('pokemon found in the state: ', result)
     } else {
-      console.log('pokémon not found');
+      console.log('pokémon not found in stored cache, making request for the api');
+      getPokemons(POKE_URL_SEARCH, true, search)
     }
-    // let result = pokemons.find(pokemon => pokemon.name === search)
-    // console.log(result)
-
-
-
-    // verify if the search exists in the current pokemon state
-    // pokemons.find(pokemon => {
-    //   pokemon.name === event.
-    // })
   }
 
   // make the request for the API
-  const getPokemons = () => {
+  // defines the default url as POKE_URL constant
+  const getPokemons = (url = POKE_URL, isSearch = false, term = '') => {
     async function fetchData() {
       try {
         // make the request for the api, with limit of 20
-        const response = await fetch(POKE_URL + "/pokemon/?limit=20")
+        const response = await fetch(url + term.toLowerCase())
+        
+        console.log("url: ", url, "term: ", term)
+
         // convert the data to a json type
         const data = await response.json()
-        // change the state  
-        setPokemons(data.results)
+
+        console.log('the data is', data);
+
+        // the concat method will be used later, when the user scroll the page
+        if(isSearch) {
+          // update state for the search result
+          setSearchResult(data)
+          // update state for the input
+          setSearch('')
+        } else {
+          // to prevent mutate the array, spread operator was used
+          setPokemons([...data.results])
+        }
+
       } catch (err) {
+        // change state for the search result, to show error in the search
+        setSearchResult([]);
+
         // error handling
          console.log(err)
       }
@@ -100,9 +113,14 @@ function App() {
           </button>
         </div>
         <div className="list-pokemon">
+          <p>pokémon list</p>
           <ul>
             {pokemons.map((pokemon, index) => <li key={index}>{index} {pokemon.name}</li>)}
           </ul>
+        </div>
+        <div className="search-result">
+          <p>Search Result: {(searchResult.length !== 0 && searchResult) ? searchResult.name : 'empty result'}</p>
+          {searchResult.length !== 0 ? console.log('the search result is', searchResult) : console.log('empty result state')}
         </div>
       </section>
       <footer></footer>
