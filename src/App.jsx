@@ -35,22 +35,11 @@ function App() {
     let result = pokemons.find(pokemon => pokemon.name.toLowerCase() === search.toLowerCase())
 
     if(result) {
-      console.log(result)
+      console.log('pokemon found in the state: ', result)
     } else {
-      console.log('pokémon not found in stored cache');
+      console.log('pokémon not found in stored cache, making request for the api');
       getPokemons(POKE_URL_SEARCH, true, search)
-      let teste = searchResult;
-      console.log(teste)
     }
-    // let result = pokemons.find(pokemon => pokemon.name === search)
-    // console.log(result)
-
-
-
-    // verify if the search exists in the current pokemon state
-    // pokemons.find(pokemon => {
-    //   pokemon.name === event.
-    // })
   }
 
   // make the request for the API
@@ -66,11 +55,23 @@ function App() {
         // convert the data to a json type
         const data = await response.json()
 
-        // if search is false, get pokémon data from start
-        // the concat method was used, because it is the first rule in the react - not mutating directly the data
-        isSearch !== true ? setPokemons(pokemons.concat(data.results)) : setSearchResult(searchResult.concat(data.results))
+        console.log('the data is', data);
+
+        // the concat method will be used later, when the user scroll the page
+        if(isSearch) {
+          // update state for the search result
+          setSearchResult(data)
+          // update state for the input
+          setSearch('')
+        } else {
+          // to prevent mutate the array, spread operator was used
+          setPokemons([...data.results])
+        }
 
       } catch (err) {
+        // change state for the search result, to show error in the search
+        setSearchResult([]);
+
         // error handling
          console.log(err)
       }
@@ -112,11 +113,15 @@ function App() {
           </button>
         </div>
         <div className="list-pokemon">
+          <p>pokémon list</p>
           <ul>
             {pokemons.map((pokemon, index) => <li key={index}>{index} {pokemon.name}</li>)}
           </ul>
         </div>
-        {searchResult.length}
+        <div className="search-result">
+          <p>Search Result: {(searchResult.length !== 0 && searchResult) ? searchResult.name : 'empty result'}</p>
+          {searchResult.length !== 0 ? console.log('the search result is', searchResult) : console.log('empty result state')}
+        </div>
       </section>
       <footer></footer>
    </>
