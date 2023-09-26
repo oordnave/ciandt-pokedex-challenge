@@ -150,7 +150,7 @@ function App() {
                 <img src={pokemon.sprite} alt={pokemon.name} />
                 <h1 className="pokemonName"> {pokemon.name} </h1>
                 {console.log(pokemon)}
-                {pokemon.stats.map(attribute => <p>{attribute.base_stat} {attribute.stat.name}</p>)}
+                {pokemon.stats.map((attribute, index) => <p key={"num" + index}>{attribute.base_stat} {attribute.stat.name}</p>)}
               </li>
             ))}
             {isLoading && <h1 className="pokemonName">{message}</h1>}
