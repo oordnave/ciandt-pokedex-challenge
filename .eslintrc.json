@@ -1,0 +1,26 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb",
+    "prettier",
+    "plugin:react/recommended",
+    "standard-with-typescript",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./package.json"
+  },
+  "plugins": ["react", "prettier"],
+  "rules": {
+    "@typescript-eslint/triple-slash-reference": "off",
+    "react/react-in-jsx-scope": "off"
+  }
+}
