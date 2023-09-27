@@ -5,6 +5,7 @@
   },
   "extends": [
     "airbnb",
+    "prettier",
     "plugin:react/recommended",
     "standard-with-typescript",
     "plugin:import/typescript",
@@ -19,6 +20,7 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
-    "@typescript-eslint/triple-slash-reference": "off"
+    "@typescript-eslint/triple-slash-reference": "off",
+    "react/react-in-jsx-scope": "off"
   }
 }
