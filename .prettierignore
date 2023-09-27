@@ -17,3 +17,6 @@
 !/tests/integration/plugins/options/plugin.cjs
 !/tests/integration/plugins/preprocess/plugin.cjs
 /tests/integration/custom-parsers/
+!tailwind.config.js
+!vite.config.js
+!postcss.config.js
