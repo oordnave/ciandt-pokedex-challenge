@@ -205,8 +205,8 @@ function App() {
                 : 'no attributes'}
               {/* console.log('List of pokemons:', pokemon, 'and his index is ', index) */}
               {/* console.log(
-                'innerHeight: ', window.innerHeight, 
-                'scrollTop: ', document.documentElement.scrollTop, 
+                'innerHeight: ', window.innerHeight,
+                'scrollTop: ', document.documentElement.scrollTop,
                 'soma: ', window.innerHeight + document.documentElement.scrollTop,
                 'offsetHeight: ', document.documentElement.offsetHeight) */}
             </div>
@@ -227,8 +227,8 @@ function App() {
                   </p>
                 ))}
                 {/* console.log(
-                  'innerHeight: ', window.innerHeight, 
-                  'scrollTop: ', document.documentElement.scrollTop, 
+                  'innerHeight: ', window.innerHeight,
+                  'scrollTop: ', document.documentElement.scrollTop,
                   'soma: ', window.innerHeight + document.documentElement.scrollTop,
                   'offsetHeight: ', document.documentElement.offsetHeight) */}
               </li>
