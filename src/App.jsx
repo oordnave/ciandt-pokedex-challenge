@@ -25,18 +25,14 @@ function App() {
   const [isLoading, setLoading] = useState(true);
 
   // handlers
-  // test handler to reference
-  const testClick = () => console.log('working');
-
   // handler to the search input
   const handleSearch = (event) => {
-    setSearch(event.target.value);
-    let teste = event.target.value;
-    console.log(teste);
+    let term = event.target.value;
+    setSearch(term);
   };
 
   // handler to clear the search input
-  const handleClear = (event) => {
+  const handleClear = () => {
     setSearch('');
     console.log('clear');
   };
