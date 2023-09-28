@@ -5,7 +5,7 @@ import logoPokedex from '../../../assets/pokedex-logo.png';
 
 const Logo = () => {
   return (
-    <div className='logo flex justify-center max-w mx-auto'>
+    <div className='logo flex justify-center max-w mx-auto pb-10'>
       <img src={logoPokedex} alt='Pokédex' />
     </div>
   );

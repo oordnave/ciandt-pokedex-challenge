@@ -1,9 +1,17 @@
 // Search component
+
+// constant for store the css properties
 const Search = ({ searchPokemon: searchEvent, search: value, handlerSearch: handlerSearch }) => {
   return (
-    <div className='search'>
-      <form action='' onSubmit={searchEvent}>
-        <input type='text' value={value} onChange={handlerSearch} />
+    <div className='search flex justify-center'>
+      <form action='' onSubmit={searchEvent} className='w-full max-w-lg'>
+        <input
+          type='text'
+          value={value}
+          onChange={handlerSearch}
+          placeholder='Search for...'
+          className='w-full border rounded text-lg px-5 py-2'
+        />
       </form>
     </div>
   );
