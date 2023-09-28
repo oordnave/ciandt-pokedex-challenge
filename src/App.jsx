@@ -51,7 +51,7 @@ function App() {
       setSearchResult(result);
     } else {
       console.log('pokémon not found in stored cache, making request for the api');
-      getPokemonFromSearch(search.toLowerCase());
+      getPokemonFromApi(search.toLowerCase());
     }
   };
 
@@ -89,6 +89,39 @@ function App() {
     });
   };
 
+  // get the pokemon from the search
+  const getPokemonFromApi = async (pokemonName) => {
+    // try-catch block
+    try {
+      // make the request for the api by pokemon name
+      let promise = await fetch(POKE_URL + pokemonName);
+
+      // waiting the promise to be fullfilled
+      let result = await promise.json();
+
+      // printing the result
+      console.log(result);
+
+      let obj = {
+        name: result.name,
+        sprite: result.sprites.front_default,
+        artwork: result.sprites.other['official-artwork'].front_default,
+        stats: result.stats,
+      };
+
+      console.log('object is: ', obj);
+
+      // change the state for the component
+      setSearchResult(obj);
+
+      // handling errors
+    } catch (error) {
+      // error message
+      console.log(error.message);
+      throw error;
+    }
+  };
+
   // defining the function to be passed into the useEffect hook
   const getPokemonsWhileScroll = () => {
     // fetching the data and updating the states
@@ -103,43 +136,7 @@ function App() {
     fetchData();
   };
 
-  const getPokemonFromSearch = (pokemonName) => {
-    if (typeof pokemonName !== 'undefined') {
-      // get the pokemon from the search
-      const getPokemonFromApi = async () => {
-        // try-catch block
-        try {
-          // make the request for the api by pokemon name
-          let promise = await fetch(POKE_URL + pokemonName);
-
-          // waiting the promise to be fullfilled
-          let result = await promise.json();
-
-          // printing the result
-          console.log(result);
-
-          let obj = {
-            name: result.name,
-            sprite: result.sprites.front_default,
-            artwork: result.sprites.other['official-artwork'].front_default,
-            stats: result.stats,
-          };
-
-          console.log('object is: ', obj);
-
-          // change the state for the component
-          setSearchResult(obj);
-
-          // handling errors
-        } catch (error) {
-          // error message
-          console.log(error.message);
-        }
-      };
-
-      getPokemonFromApi();
-    }
-  };
+  const getPokemonFromSearch = () => {};
 
   // effects
   // using to get the pokemon data
