@@ -31,6 +31,14 @@ function App() {
   // handler to the search input
   const handleSearch = (event) => {
     setSearch(event.target.value);
+    let teste = event.target.value;
+    console.log(teste);
+  };
+
+  // handler to clear the search input
+  const handleClear = (event) => {
+    setSearch('');
+    console.log('clear');
   };
 
   // handler to perform a search
@@ -110,8 +118,6 @@ function App() {
       // change the state for the component
       setSearchResult(obj);
 
-      // reset search field
-      setSearch('');
       // handling errors
     } catch (error) {
       // error message
@@ -164,7 +170,12 @@ function App() {
     <>
       <Header />
       <section>
-        <Search searchPokemon={searchPokemon} search={search} handlerSearch={handleSearch} />
+        <Search
+          searchPokemon={searchPokemon}
+          value={search}
+          handleSearch={handleSearch}
+          handleClear={handleClear}
+        />
         <div className='search-result'>
           <h1>Show the result from search</h1>
           <p>
@@ -193,7 +204,12 @@ function App() {
             </div>
           </div>
         </div>
-        <InfiniteScroll allPokemons={allPokemons} isLoading={isLoading} message={message} />
+        <InfiniteScroll
+          allPokemons={allPokemons}
+          searchResult={searchResult}
+          isLoading={isLoading}
+          message={message}
+        />
       </section>
       <footer></footer>
     </>
