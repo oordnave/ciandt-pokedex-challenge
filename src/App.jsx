@@ -1,6 +1,7 @@
 // make the imports
 import { useState, useEffect } from 'react';
 import Header from './components/blocks/Header/Header';
+import Search from './components/blocks/Search/Search';
 
 // declaring constants
 const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/';
@@ -162,11 +163,7 @@ function App() {
     <>
       <Header />
       <section>
-        <div className='search'>
-          <form action='' onSubmit={searchPokemon}>
-            <input type='text' value={search} onChange={handleSearch} />
-          </form>
-        </div>
+        <Search searchPokemon={searchPokemon} search={search} handlerSearch={handleSearch} />
         <div className='list-all-button' onClick={testClick}>
           <button>List all Pokémons</button>
         </div>
