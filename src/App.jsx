@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Header from './components/blocks/Header/Header';
 import Search from './components/blocks/Search/Search';
+import InfiniteScroll from './components/blocks/InfiniteScroll/InfiniteScroll';
 
 // declaring constants
 const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/';
@@ -164,9 +165,6 @@ function App() {
       <Header />
       <section>
         <Search searchPokemon={searchPokemon} search={search} handlerSearch={handleSearch} />
-        <div className='list-all-button' onClick={testClick}>
-          <button>List all Pokémons</button>
-        </div>
         <div className='search-result'>
           <h1>Show the result from search</h1>
           <p>
@@ -195,34 +193,7 @@ function App() {
             </div>
           </div>
         </div>
-        <div className='list-pokemon'>
-          <h1>pokémon list with infinite scroll</h1>
-          <p>Total Pokemons: {allPokemons.length}</p>
-          <ul>
-            {allPokemons.map((pokemon, index) => (
-              <li className='card' key={'num' + index}>
-                <h1 className='pokemonName'> {pokemon.name}</h1>
-                <img src={pokemon.artwork} alt={pokemon.name} />
-                {/* console.log('List of pokemons:', pokemon, 'and his index is ', index) */}
-                {pokemon.stats.map((attribute, index) => (
-                  <p key={'num' + index}>
-                    {attribute.base_stat} {attribute.stat.name}
-                  </p>
-                ))}
-                {/* console.log(
-                  'innerHeight: ', window.innerHeight,
-                  'scrollTop: ', document.documentElement.scrollTop,
-                  'soma: ', window.innerHeight + document.documentElement.scrollTop,
-                  'offsetHeight: ', document.documentElement.offsetHeight) */}
-              </li>
-            ))}
-            {isLoading ? (
-              <h1 className='pokemonName'>{message}</h1>
-            ) : (
-              <h1 className='pokemonName'>{message}</h1>
-            )}
-          </ul>
-        </div>
+        <InfiniteScroll allPokemons={allPokemons} isLoading={isLoading} message={message} />
       </section>
       <footer></footer>
     </>
