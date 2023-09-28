@@ -1,6 +1,7 @@
 // make the imports
 import { useState, useEffect } from 'react';
 import Header from './components/blocks/Header/Header';
+
 // declaring constants
 const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/';
 

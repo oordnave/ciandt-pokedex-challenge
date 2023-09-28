@@ -1,9 +1,13 @@
 // Header component
+
+// importing the header, logo components
 import HeaderElement from '../../elements/HeaderElement';
+import Logo from '../Logo/Logo';
 
 const Header = () => {
   return (
     <HeaderElement>
+      <Logo />
       <div className='buttons'>
         <div className='favorites'>
           <a href=''>Favorites</a>
@@ -13,10 +17,6 @@ const Header = () => {
             Compare
           </a>
         </div>
-      </div>
-      <div className='logo'>
-        <img src='' alt='' />
-        <p>Pokédex</p>
       </div>
     </HeaderElement>
   );
