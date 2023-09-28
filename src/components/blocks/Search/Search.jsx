@@ -1,6 +1,5 @@
 // Search component
 
-// constant for store the css properties
 const Search = ({ searchPokemon: searchEvent, search: value, handlerSearch: handlerSearch }) => {
   return (
     <div className='search flex justify-center'>
