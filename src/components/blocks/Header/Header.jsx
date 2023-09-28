@@ -8,10 +8,10 @@ const Header = () => {
   return (
     <HeaderElement>
       <div className='buttons flex justify-end'>
-        <div className='favorites'>
+        <div className='favorites p-2'>
           <a href=''>Favorites</a>
         </div>
-        <div className='compare'>
+        <div className='compare p-2'>
           <a href='' className=''>
             Compare
           </a>
