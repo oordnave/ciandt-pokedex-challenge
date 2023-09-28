@@ -7,17 +7,17 @@ import Logo from '../Logo/Logo';
 const Header = () => {
   return (
     <HeaderElement>
-      <Logo />
-      <div className='buttons'>
+      <div className='buttons flex justify-end'>
         <div className='favorites'>
           <a href=''>Favorites</a>
         </div>
         <div className='compare'>
-          <a href='' className='text-3xl'>
+          <a href='' className=''>
             Compare
           </a>
         </div>
       </div>
+      <Logo />
     </HeaderElement>
   );
 };
