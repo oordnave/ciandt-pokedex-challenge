@@ -1,6 +1,6 @@
 // make the imports
 import { useState, useEffect } from 'react';
-
+import Header from './components/blocks/Header/Header';
 // declaring constants
 const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/';
 
@@ -159,22 +159,7 @@ function App() {
 
   return (
     <>
-      <header>
-        <div className='buttons'>
-          <div className='favorites'>
-            <a href=''>Favorites</a>
-          </div>
-          <div className='compare'>
-            <a href='' className='text-3xl'>
-              Compare
-            </a>
-          </div>
-        </div>
-        <div className='logo'>
-          <img src='' alt='' />
-          <p>Pokédex</p>
-        </div>
-      </header>
+      <Header />
       <section>
         <div className='search'>
           <form action='' onSubmit={searchPokemon}>
