@@ -9,10 +9,10 @@ const Header = () => {
     <HeaderElement>
       <div className='buttons flex justify-end'>
         <div className='favorites p-2'>
-          <a href=''>Favorites</a>
+          <a href='/favorites'>Favorites</a>
         </div>
         <div className='compare p-2'>
-          <a href='' className=''>
+          <a href='/compare' className=''>
             Compare
           </a>
         </div>
