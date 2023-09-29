@@ -1,5 +1,8 @@
 // Infinite scroll component
 
+// Importing Link from routes
+import { Link } from 'react-router-dom';
+
 // Importing prop-types for prop validation
 import PropTypes from 'prop-types';
 
@@ -23,6 +26,8 @@ const InfiniteScroll = ({ allPokemons, searchResult, isLoading, message, searchM
         {pokemonList.map((pokemon, index) => (
           <li className='card' key={'num' + index}>
             <h1 className='pokemonName'> {pokemon.name}</h1>
+            <p>Index is {index + 1}</p>
+            <Link to={`pokemon/${index + 1}`}>Link to the pokemon</Link>
             <img src={pokemon.artwork} alt={pokemon.name} />
             {pokemon.stats.map((attribute, index) => (
               <p key={'num' + index}>
