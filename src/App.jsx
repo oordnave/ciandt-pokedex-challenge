@@ -42,23 +42,34 @@ function App() {
     // preventing the default behaviour from the form
     event.preventDefault();
 
-    // first, verify in the pokemons state if the pokemon exists
-    let result = allPokemons.find((pokemon) => pokemon.name.toLowerCase() === search.toLowerCase());
+    if (search.length > 0) {
+      // first, verify in the pokemons state if the pokemon exists
+      let result = allPokemons.find(
+        (pokemon) => pokemon.name.toLowerCase() === search.toLowerCase(),
+      );
 
-    // conditionals if result exists, if not search in the API
-    if (result) {
-      console.log('pokemon found in the state: ', result);
+      // conditionals if result exists, if not search in the API
+      if (result) {
+        console.log('pokemon found in the state: ', result);
+        setSearchMessage('pokemon found in the state');
 
-      let resultArray = [];
+        let resultArray = [];
 
-      resultArray.push(result);
+        resultArray.push(result);
 
-      console.log(resultArray);
+        console.log(resultArray);
 
-      setSearchResult(resultArray);
+        setSearchResult(resultArray);
+      } else {
+        console.log('pokémon not found in stored cache, making request for the api');
+        setSearchMessage('pokémon not found in stored cache, making request for the api');
+        setLoading(true);
+        getPokemonFromSearch(search.toLowerCase());
+      }
     } else {
-      console.log('pokémon not found in stored cache, making request for the api');
-      getPokemonFromSearch(search.toLowerCase());
+      setSearchResult([]);
+      setSearchMessage('type something to show in search!');
+      setLoading(true);
     }
   };
 
@@ -118,7 +129,7 @@ function App() {
         },
       ];
 
-      console.log('Array is: ', resultArray);
+      console.log('Array is:', resultArray);
 
       return resultArray;
       // handling errors
@@ -200,30 +211,12 @@ function App() {
           handleSearch={handleSearch}
           handleClear={handleClear}
         />
-        <div className='search-result'>
-          <h1>Show the result from search</h1>
-          <p>Search Result: {searchResult.length !== 0 ? searchResult[0].name : searchMessage}</p>
-          <>
-            {searchResult.map((pokemon, index) => {
-              return (
-                <div className='card' key={'num' + index}>
-                  <h1 className='pokemonName'> {pokemon.name}</h1>
-                  <img src={pokemon.artwork} alt={pokemon.name} />
-                  {pokemon.stats.map((attribute, index) => (
-                    <p key={'num' + index}>
-                      {attribute.base_stat} {attribute.stat.name}
-                    </p>
-                  ))}
-                </div>
-              );
-            })}
-          </>
-        </div>
         <InfiniteScroll
           allPokemons={allPokemons}
           searchResult={searchResult}
           isLoading={isLoading}
           message={message}
+          searchMessage={searchMessage}
         />
       </section>
       <footer></footer>
