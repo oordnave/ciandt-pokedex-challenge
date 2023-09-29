@@ -1,5 +1,8 @@
 // Search component
 
+// Importing prop-types for prop validation
+import PropTypes from 'prop-types';
+
 const Search = ({ searchPokemon, value, handleSearch, handleClear }) => {
   return (
     <div className='search flex justify-center'>
@@ -35,6 +38,14 @@ const Search = ({ searchPokemon, value, handleSearch, handleClear }) => {
       </form>
     </div>
   );
+};
+
+// Validating props
+Search.propTypes = {
+  searchPokemon: PropTypes.string,
+  value: PropTypes.string,
+  handleSearch: PropTypes.func,
+  handleClear: PropTypes.func,
 };
 
 export default Search;
