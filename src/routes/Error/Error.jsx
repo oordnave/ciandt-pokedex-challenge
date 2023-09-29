@@ -9,7 +9,7 @@ const Error = () => {
   console.log(error);
 
   return (
-    <div>
+    <div id='error-page'>
       <p>Sorry, an unexpected error has occurred.</p>
       <p>{error.statusText || error.message}</p>
     </div>
