@@ -25,18 +25,14 @@ function App() {
   const [isLoading, setLoading] = useState(true);
 
   // handlers
-  // test handler to reference
-  const testClick = () => console.log('working');
-
   // handler to the search input
   const handleSearch = (event) => {
-    setSearch(event.target.value);
-    let teste = event.target.value;
-    console.log(teste);
+    let term = event.target.value;
+    setSearch(term);
   };
 
   // handler to clear the search input
-  const handleClear = (event) => {
+  const handleClear = () => {
     setSearch('');
     console.log('clear');
   };
@@ -46,16 +42,34 @@ function App() {
     // preventing the default behaviour from the form
     event.preventDefault();
 
-    // first, verify in the pokemons state if the pokemon exists
-    let result = allPokemons.find((pokemon) => pokemon.name.toLowerCase() === search.toLowerCase());
+    if (search.length > 0) {
+      // first, verify in the pokemons state if the pokemon exists
+      let result = allPokemons.find(
+        (pokemon) => pokemon.name.toLowerCase() === search.toLowerCase(),
+      );
 
-    // conditionals if result exists, if not search in the API
-    if (result) {
-      console.log('pokemon found in the state: ', result);
-      setSearchResult(result);
+      // conditionals if result exists, if not search in the API
+      if (result) {
+        console.log('pokemon found in the state: ', result);
+        setSearchMessage('pokemon found in the state');
+
+        let resultArray = [];
+
+        resultArray.push(result);
+
+        console.log(resultArray);
+
+        setSearchResult(resultArray);
+      } else {
+        console.log('pokémon not found in stored cache, making request for the api');
+        setSearchMessage('pokémon not found in stored cache, making request for the api');
+        setLoading(true);
+        getPokemonFromSearch(search.toLowerCase());
+      }
     } else {
-      console.log('pokémon not found in stored cache, making request for the api');
-      getPokemonFromApi(search.toLowerCase());
+      setSearchResult([]);
+      setSearchMessage('type something to show in search!');
+      setLoading(true);
     }
   };
 
@@ -106,22 +120,23 @@ function App() {
       // printing the result
       console.log(result);
 
-      let obj = {
-        name: result.name,
-        sprite: result.sprites.front_default,
-        artwork: result.sprites.other['official-artwork'].front_default,
-        stats: result.stats,
-      };
+      let resultArray = [
+        {
+          name: result.name,
+          sprite: result.sprites.front_default,
+          artwork: result.sprites.other['official-artwork'].front_default,
+          stats: result.stats,
+        },
+      ];
 
-      console.log('object is: ', obj);
+      console.log('Array is:', resultArray);
 
-      // change the state for the component
-      setSearchResult(obj);
-
+      return resultArray;
       // handling errors
     } catch (error) {
       // error message
       console.log(error.message);
+      throw error;
     }
   };
 
@@ -139,9 +154,29 @@ function App() {
     fetchData();
   };
 
+  const getPokemonFromSearch = (pokemonName) => {
+    if (pokemonName) {
+      // fetching the data and updating the states
+      const fetchData = async () => {
+        try {
+          const response = await getPokemonFromApi(pokemonName);
+          setSearchResult(response);
+        } catch (err) {
+          console.log(err);
+          setSearchResult([]);
+          setSearchMessage('Pokémon not found!');
+          throw err;
+        }
+      };
+
+      fetchData();
+    }
+  };
+
   // effects
   // using to get the pokemon data
   useEffect(getPokemonsWhileScroll, []);
+  useEffect(getPokemonFromSearch, []);
 
   // Using the onscroll property
   // To verify the offset from the user, and make the API call while scrolling
@@ -176,39 +211,12 @@ function App() {
           handleSearch={handleSearch}
           handleClear={handleClear}
         />
-        <div className='search-result'>
-          <h1>Show the result from search</h1>
-          <p>
-            Search Result:{' '}
-            {Object.keys(searchResult).length !== 0 && searchResult
-              ? searchResult.name
-              : 'empty result'}
-          </p>
-          <div>
-            <div className='card'>
-              <h1 className='pokemonName'> {searchResult.name}</h1>
-              <img src={searchResult.artwork} alt={searchResult.name} />
-              {Object.keys(searchResult).length !== 0
-                ? searchResult.stats.map((attribute, index) => (
-                    <p key={'num' + index}>
-                      {attribute.base_stat} {attribute.stat.name}
-                    </p>
-                  ))
-                : 'no attributes'}
-              {/* console.log('List of pokemons:', pokemon, 'and his index is ', index) */}
-              {/* console.log(
-                'innerHeight: ', window.innerHeight,
-                'scrollTop: ', document.documentElement.scrollTop,
-                'soma: ', window.innerHeight + document.documentElement.scrollTop,
-                'offsetHeight: ', document.documentElement.offsetHeight) */}
-            </div>
-          </div>
-        </div>
         <InfiniteScroll
           allPokemons={allPokemons}
           searchResult={searchResult}
           isLoading={isLoading}
           message={message}
+          searchMessage={searchMessage}
         />
       </section>
       <footer></footer>
