@@ -42,7 +42,7 @@ const Search = ({ searchPokemon, value, handleSearch, handleClear }) => {
 
 // Validating props
 Search.propTypes = {
-  searchPokemon: PropTypes.string,
+  searchPokemon: PropTypes.func,
   value: PropTypes.string,
   handleSearch: PropTypes.func,
   handleClear: PropTypes.func,
