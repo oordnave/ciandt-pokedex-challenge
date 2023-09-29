@@ -1,7 +1,7 @@
 // favorite component
 
 const Favorites = () => {
-  return <div></div>;
+  return <div>Favorites</div>;
 };
 
 export default Favorites;

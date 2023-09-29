@@ -1,7 +1,7 @@
 // compare component
 
 const Compare = () => {
-  return <div></div>;
+  return <div>Compare</div>;
 };
 
 export default Compare;
