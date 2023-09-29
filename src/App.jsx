@@ -48,7 +48,14 @@ function App() {
     // conditionals if result exists, if not search in the API
     if (result) {
       console.log('pokemon found in the state: ', result);
-      setSearchResult(result);
+
+      let resultArray = [];
+
+      resultArray.push(result);
+
+      console.log(resultArray);
+
+      setSearchResult(resultArray);
     } else {
       console.log('pokémon not found in stored cache, making request for the api');
       getPokemonFromSearch(search.toLowerCase());
@@ -102,19 +109,18 @@ function App() {
       // printing the result
       console.log(result);
 
-      let obj = {
-        name: result.name,
-        sprite: result.sprites.front_default,
-        artwork: result.sprites.other['official-artwork'].front_default,
-        stats: result.stats,
-      };
+      let resultArray = [
+        {
+          name: result.name,
+          sprite: result.sprites.front_default,
+          artwork: result.sprites.other['official-artwork'].front_default,
+          stats: result.stats,
+        },
+      ];
 
-      console.log('object is: ', obj);
+      console.log('Array is: ', resultArray);
 
-      // change the state for the component
-      // setSearchResult(obj);
-
-      return obj;
+      return resultArray;
       // handling errors
     } catch (error) {
       // error message
@@ -196,25 +202,22 @@ function App() {
         />
         <div className='search-result'>
           <h1>Show the result from search</h1>
-          <p>
-            Search Result:{' '}
-            {Object.keys(searchResult).length !== 0 && searchResult
-              ? searchResult.name
-              : searchMessage}
-          </p>
-          <div>
-            <div className='card'>
-              <h1 className='pokemonName'> {searchResult.name}</h1>
-              <img src={searchResult.artwork} alt={searchResult.name} />
-              {Object.keys(searchResult).length !== 0
-                ? searchResult.stats.map((attribute, index) => (
+          <p>Search Result: {searchResult.length !== 0 ? searchResult[0].name : searchMessage}</p>
+          <>
+            {searchResult.map((pokemon, index) => {
+              return (
+                <div className='card' key={'num' + index}>
+                  <h1 className='pokemonName'> {pokemon.name}</h1>
+                  <img src={pokemon.artwork} alt={pokemon.name} />
+                  {pokemon.stats.map((attribute, index) => (
                     <p key={'num' + index}>
                       {attribute.base_stat} {attribute.stat.name}
                     </p>
-                  ))
-                : 'no attributes'}
-            </div>
-          </div>
+                  ))}
+                </div>
+              );
+            })}
+          </>
         </div>
         <InfiniteScroll
           allPokemons={allPokemons}

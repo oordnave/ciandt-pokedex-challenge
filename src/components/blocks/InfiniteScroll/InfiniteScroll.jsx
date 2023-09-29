@@ -1,9 +1,15 @@
-const InfiniteScroll = ({ allPokemons, isLoading, message }) => {
+// Infinite scroll component
+
+// Importing prop-types for prop validation
+import PropTypes from 'prop-types';
+
+const InfiniteScroll = ({ allPokemons, searchResult, isLoading, message }) => {
   return (
     <div className='list-pokemon'>
       <div>
         <h1>pokémon list with infinite scroll</h1>
         <p>Total Pokemons: {allPokemons.length}</p>
+        <p>Search result length: {searchResult.length}</p>
       </div>
       <ul>
         {allPokemons.map((pokemon, index) => (
@@ -25,6 +31,14 @@ const InfiniteScroll = ({ allPokemons, isLoading, message }) => {
       </ul>
     </div>
   );
+};
+
+// Validating props
+InfiniteScroll.propTypes = {
+  allPokemons: PropTypes.array,
+  searchResult: PropTypes.array,
+  isLoading: PropTypes.bool,
+  message: PropTypes.string,
 };
 
 export default InfiniteScroll;
