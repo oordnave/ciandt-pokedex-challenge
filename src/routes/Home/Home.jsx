@@ -26,6 +26,9 @@ function App() {
   const [message, setMessage] = useState('');
   const [isLoading, setLoading] = useState(true);
 
+  // states to prevent the reload when user navigates the page
+  const [dataFetched, setDataFetched] = useState(false);
+
   // handlers
   // handler to the search input
   const handleSearch = (event) => {
@@ -143,20 +146,6 @@ function App() {
     }
   };
 
-  // defining the function to be passed into the useEffect hook
-  const getPokemonsWhileScroll = () => {
-    // fetching the data and updating the states
-    const fetchData = async () => {
-      setLoading(true);
-      setMessage('loading');
-      const response = await getAllPokemons(1);
-      setAllPokemons(response);
-      setLoading(false);
-    };
-
-    fetchData();
-  };
-
   const getPokemonFromSearch = (pokemonName) => {
     if (pokemonName) {
       // fetching the data and updating the states
@@ -176,10 +165,25 @@ function App() {
     }
   };
 
-  // effects
-  // using to get the pokemon data
-  useEffect(getPokemonsWhileScroll, []);
-  useEffect(getPokemonFromSearch, []);
+  // defining the function to be passed into the useEffect hook
+  const getPokemonsWhileScroll = () => {
+    //
+    if (!dataFetched) {
+      // fetching the data and updating the states
+      const fetchData = async () => {
+        setLoading(true);
+        setMessage('loading');
+        const response = await getAllPokemons(1);
+        setAllPokemons(response);
+        setLoading(false);
+
+        //
+        setDataFetched(true);
+      };
+
+      fetchData();
+    }
+  };
 
   // Using the onscroll property
   // To verify the offset from the user, and make the API call while scrolling
@@ -203,6 +207,11 @@ function App() {
       });
     }
   };
+
+  // effects
+  // using to get the pokemon data
+  useEffect(getPokemonsWhileScroll, [dataFetched]);
+  useEffect(getPokemonFromSearch, []);
 
   return (
     <>
