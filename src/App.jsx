@@ -138,7 +138,6 @@ function App() {
   };
 
   const getPokemonFromSearch = (pokemonName) => {
-    // verify if name exists, to execute the async function
     if (pokemonName) {
       // fetching the data and updating the states
       const fetchData = async () => {
@@ -147,7 +146,7 @@ function App() {
           setSearchResult(response);
         } catch (err) {
           console.log(err);
-          setSearchMessage('Pokémon not found!');
+          setSearchMessage('Pokémon not found! Find other!');
           throw err;
         }
       };
