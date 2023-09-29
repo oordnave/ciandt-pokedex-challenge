@@ -146,7 +146,8 @@ function App() {
           setSearchResult(response);
         } catch (err) {
           console.log(err);
-          setSearchMessage('Pokémon not found! Find other!');
+          setSearchResult([]);
+          setSearchMessage('Pokémon not found!');
           throw err;
         }
       };
@@ -199,7 +200,7 @@ function App() {
             Search Result:{' '}
             {Object.keys(searchResult).length !== 0 && searchResult
               ? searchResult.name
-              : 'empty result'}
+              : searchMessage}
           </p>
           <div>
             <div className='card'>
@@ -212,12 +213,6 @@ function App() {
                     </p>
                   ))
                 : 'no attributes'}
-              {/* console.log('List of pokemons:', pokemon, 'and his index is ', index) */}
-              {/* console.log(
-                'innerHeight: ', window.innerHeight,
-                'scrollTop: ', document.documentElement.scrollTop,
-                'soma: ', window.innerHeight + document.documentElement.scrollTop,
-                'offsetHeight: ', document.documentElement.offsetHeight) */}
             </div>
           </div>
         </div>
