@@ -1,5 +1,7 @@
 // make the imports
 import { useState, useEffect } from 'react';
+
+// components
 import Header from './components/blocks/Header/Header';
 import Search from './components/blocks/Search/Search';
 import InfiniteScroll from './components/blocks/InfiniteScroll/InfiniteScroll';
@@ -34,6 +36,7 @@ function App() {
   // handler to clear the search input
   const handleClear = () => {
     setSearch('');
+    setSearchResult([]);
     console.log('clear');
   };
 
@@ -204,13 +207,13 @@ function App() {
   return (
     <>
       <Header />
+      <Search
+        searchPokemon={searchPokemon}
+        value={search}
+        handleSearch={handleSearch}
+        handleClear={handleClear}
+      />
       <section>
-        <Search
-          searchPokemon={searchPokemon}
-          value={search}
-          handleSearch={handleSearch}
-          handleClear={handleClear}
-        />
         <InfiniteScroll
           allPokemons={allPokemons}
           searchResult={searchResult}
