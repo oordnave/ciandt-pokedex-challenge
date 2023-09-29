@@ -51,7 +51,7 @@ function App() {
       setSearchResult(result);
     } else {
       console.log('pokémon not found in stored cache, making request for the api');
-      getPokemonFromApi(search.toLowerCase());
+      getPokemonFromSearch(search.toLowerCase());
     }
   };
 
@@ -112,8 +112,9 @@ function App() {
       console.log('object is: ', obj);
 
       // change the state for the component
-      setSearchResult(obj);
+      // setSearchResult(obj);
 
+      return obj;
       // handling errors
     } catch (error) {
       // error message
@@ -136,7 +137,24 @@ function App() {
     fetchData();
   };
 
-  const getPokemonFromSearch = () => {};
+  const getPokemonFromSearch = (pokemonName) => {
+    // verify if name exists, to execute the async function
+    if (pokemonName) {
+      // fetching the data and updating the states
+      const fetchData = async () => {
+        try {
+          const response = await getPokemonFromApi(pokemonName);
+          setSearchResult(response);
+        } catch (err) {
+          console.log(err);
+          setSearchMessage('Pokémon not found!');
+          throw err;
+        }
+      };
+
+      fetchData();
+    }
+  };
 
   // effects
   // using to get the pokemon data
