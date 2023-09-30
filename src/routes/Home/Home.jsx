@@ -79,10 +79,6 @@ function App() {
   };
 
   // effects
-  // using to get the pokemon data
-  // useEffect(getPokemonsWhileScroll, []);
-  // useEffect(getPokemonFromSearch, []);
-
   // fetching the data and updating the states
   const fetchPokemonData = async (pokemonName) => {
     if (pokemonName) {
