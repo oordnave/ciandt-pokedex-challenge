@@ -33,7 +33,12 @@ const Home = () => {
   // handler to the search input
   const handleSearch = (event) => {
     let term = event.target.value;
-    setSearch(term);
+    if (term) {
+      setSearch(term);
+    } else {
+      setSearch('');
+      setSearchResult([]);
+    }
   };
 
   // handler to clear the search input
