@@ -1,32 +1,33 @@
 // make the imports
-import { useState, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
+// importing the context
+import { usePokemonContext } from '../../context/PokemonContext';
 // components
 import Header from '../../components/blocks/Header/Header';
 import Search from '../../components/blocks/Search/Search';
 import InfiniteScroll from '../../components/blocks/InfiniteScroll/InfiniteScroll';
 
-// declaring constants
-const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/';
+// api calls
+import { getAllPokemons, getPokemonFromApi } from '../../api/api';
 
 // App component
-function App() {
-  // states
-  // state for all the pokémons
-  const [allPokemons, setAllPokemons] = useState([]);
-
-  // state for the search query
-  const [search, setSearch] = useState('');
-
-  // state for the search result
-  const [searchResult, setSearchResult] = useState([]);
-  const [searchMessage, setSearchMessage] = useState('');
-
-  // state for the infinite scroll
-  const [message, setMessage] = useState('');
-  const [isLoading, setLoading] = useState(true);
-
-  // states to prevent the reload when user navigates the page
+const Home = () => {
+  // states from useContext
+  const {
+    allPokemons,
+    setAllPokemons,
+    search,
+    setSearch,
+    searchResult,
+    setSearchResult,
+    searchMessage,
+    setSearchMessage,
+    message,
+    setMessage,
+    isLoading,
+    setLoading,
+  } = usePokemonContext();
 
   // handlers
   // handler to the search input
@@ -69,7 +70,7 @@ function App() {
         console.log('pokémon not found in stored cache, making request for the api');
         setSearchMessage('pokémon not found in stored cache, making request for the api');
         setLoading(true);
-        getPokemonFromSearch(search.toLowerCase());
+        fetchPokemonData(search.toLowerCase());
       }
     } else {
       setSearchResult([]);
@@ -78,77 +79,11 @@ function App() {
     }
   };
 
-  // get all the pokemon data
-  const getAllPokemons = async (length) => {
-    // defining an empty array to store the promises
-    const promiseArray = [];
-
-    // populate the array with promises
-    // this time, we make the requests for the api based on the id from the pokemon
-    // the try-catch block is insde the foreach, to verify if the first request is succeed or not
-    // if not, throw an error and stops the loop, passing the message to the statee
-    for (let i = length; i < length + 20; i++) {
-      try {
-        // push into the state array
-        promiseArray.push((await fetch(POKE_URL + `${i}`)).json());
-        // error caching
-      } catch (error) {
-        setMessage(error.message);
-        break;
-      }
-    }
-
-    // wait for the promise array to resolve
-    const allPokemonData = await Promise.all(promiseArray);
-
-    // return the data from each pokemon
-    return allPokemonData.map((pokemon) => {
-      return {
-        name: pokemon.name,
-        sprite: pokemon.sprites.front_default,
-        artwork: pokemon.sprites.other['official-artwork'].front_default,
-        stats: pokemon.stats,
-      };
-    });
-  };
-
-  // get the pokemon from the search
-  const getPokemonFromApi = async (pokemonName) => {
-    // try-catch block
-    try {
-      // make the request for the api by pokemon name
-      let promise = await fetch(POKE_URL + pokemonName);
-
-      // waiting the promise to be fullfilled
-      let result = await promise.json();
-
-      // printing the result
-      console.log(result);
-
-      let resultArray = [
-        {
-          name: result.name,
-          sprite: result.sprites.front_default,
-          artwork: result.sprites.other['official-artwork'].front_default,
-          stats: result.stats,
-        },
-      ];
-
-      console.log('Array is:', resultArray);
-
-      return resultArray;
-      // handling errors
-    } catch (error) {
-      // error message
-      console.log(error.message);
-      throw error;
-    }
-  };
-
-  const getPokemonFromSearch = (pokemonName) => {
-    if (pokemonName) {
-      // fetching the data and updating the states
-      const fetchData = async () => {
+  // effects
+  // fetching the data and updating the states
+  const fetchPokemonData = useCallback(
+    async (pokemonName) => {
+      if (pokemonName) {
         try {
           const response = await getPokemonFromApi(pokemonName);
           setSearchResult(response);
@@ -158,29 +93,21 @@ function App() {
           setSearchMessage('Pokémon not found!');
           throw err;
         }
-      };
+      } else {
+        setLoading(true);
+        setMessage('loading');
+        const response = await getAllPokemons(1);
+        setAllPokemons(response);
+        setLoading(false);
+      }
+    },
+    [setAllPokemons, setSearchResult, setSearchMessage, setLoading, setMessage],
+  );
 
-      fetchData();
-    }
-  };
-
-  // effects
-  // using to get the pokemon data
-  // useEffect(getPokemonsWhileScroll, []);
-  useEffect(getPokemonFromSearch, []);
-
-  // fetching the data and updating the states
-  const fetchData = async () => {
-    setLoading(true);
-    setMessage('loading');
-    const response = await getAllPokemons(1);
-    setAllPokemons(response);
-    setLoading(false);
-  };
-
+  // useEffect to fetch the data for all the pokemons
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchPokemonData();
+  }, [fetchPokemonData]);
 
   // useEffect to handle the scroll event for the user
   useEffect(() => {
@@ -214,7 +141,7 @@ function App() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [allPokemons]);
+  }, [allPokemons, setAllPokemons, setLoading, setMessage]);
 
   return (
     <>
@@ -237,6 +164,6 @@ function App() {
       <footer></footer>
     </>
   );
-}
+};
 
-export default App;
+export default Home;
