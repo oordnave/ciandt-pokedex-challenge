@@ -26,6 +26,8 @@ function App() {
   const [message, setMessage] = useState('');
   const [isLoading, setLoading] = useState(true);
 
+  // states to prevent the reload when user navigates the page
+
   // handlers
   // handler to the search input
   const handleSearch = (event) => {
@@ -143,20 +145,6 @@ function App() {
     }
   };
 
-  // defining the function to be passed into the useEffect hook
-  const getPokemonsWhileScroll = () => {
-    // fetching the data and updating the states
-    const fetchData = async () => {
-      setLoading(true);
-      setMessage('loading');
-      const response = await getAllPokemons(1);
-      setAllPokemons(response);
-      setLoading(false);
-    };
-
-    fetchData();
-  };
-
   const getPokemonFromSearch = (pokemonName) => {
     if (pokemonName) {
       // fetching the data and updating the states
@@ -178,31 +166,55 @@ function App() {
 
   // effects
   // using to get the pokemon data
-  useEffect(getPokemonsWhileScroll, []);
+  // useEffect(getPokemonsWhileScroll, []);
   useEffect(getPokemonFromSearch, []);
 
-  // Using the onscroll property
-  // To verify the offset from the user, and make the API call while scrolling
-  window.onscroll = () => {
-    if (allPokemons.length > 70) {
-      setMessage('Reached end of the list!!');
-      return;
-    }
-    if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
-    ) {
-      setMessage('Loading...');
-      setLoading(true);
-      // the getPokemonData method is adding one, because it was duplicating the data
-      // the array starts at zero, because of that we need to add one
-      // to prevent mutating the array directly, we use the spread operator
-      getAllPokemons(allPokemons.length + 1).then((newPokemons) => {
-        setAllPokemons([...allPokemons, ...newPokemons]);
-        setLoading(false);
-      });
-    }
+  // fetching the data and updating the states
+  const fetchData = async () => {
+    setLoading(true);
+    setMessage('loading');
+    const response = await getAllPokemons(1);
+    setAllPokemons(response);
+    setLoading(false);
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // useEffect to handle the scroll event for the user
+  useEffect(() => {
+    const handleScroll = () => {
+      // verifying if scroll event is fired
+      console.log('event fired!');
+
+      // for testing purpouses, verify if the length is 70
+      if (allPokemons.length > 70) {
+        setMessage('Reached the end of the list!!');
+        return;
+      }
+      if (
+        window.innerHeight + document.documentElement.scrollTop ===
+        document.documentElement.offsetHeight
+      ) {
+        setMessage('Loading...');
+        setLoading(true);
+        // the getPokemonData method is adding one, because it was duplicating the data
+        // the array starts at zero, because of that we need to add one
+        // to prevent mutating the array directly, we use the spread operator
+        getAllPokemons(allPokemons.length + 1).then((newPokemons) => {
+          setAllPokemons([...allPokemons, ...newPokemons]);
+          setLoading(false);
+        });
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [allPokemons]);
 
   return (
     <>
