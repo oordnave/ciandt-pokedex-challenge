@@ -1,6 +1,8 @@
 // make the imports
-import { useState, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
+// importing the context
+import { usePokemonContext } from '../../context/PokemonContext';
 // components
 import Header from '../../components/blocks/Header/Header';
 import Search from '../../components/blocks/Search/Search';
@@ -10,23 +12,22 @@ import InfiniteScroll from '../../components/blocks/InfiniteScroll/InfiniteScrol
 import { getAllPokemons, getPokemonFromApi } from '../../api/api';
 
 // App component
-function App() {
-  // states
-  // state for all the pokémons
-  const [allPokemons, setAllPokemons] = useState([]);
-
-  // state for the search query
-  const [search, setSearch] = useState('');
-
-  // state for the search result
-  const [searchResult, setSearchResult] = useState([]);
-  const [searchMessage, setSearchMessage] = useState('');
-
-  // state for the infinite scroll
-  const [message, setMessage] = useState('');
-  const [isLoading, setLoading] = useState(true);
-
-  // states to prevent the reload when user navigates the page
+const Home = () => {
+  // states from useContext
+  const {
+    allPokemons,
+    setAllPokemons,
+    search,
+    setSearch,
+    searchResult,
+    setSearchResult,
+    searchMessage,
+    setSearchMessage,
+    message,
+    setMessage,
+    isLoading,
+    setLoading,
+  } = usePokemonContext();
 
   // handlers
   // handler to the search input
@@ -80,30 +81,33 @@ function App() {
 
   // effects
   // fetching the data and updating the states
-  const fetchPokemonData = async (pokemonName) => {
-    if (pokemonName) {
-      try {
-        const response = await getPokemonFromApi(pokemonName);
-        setSearchResult(response);
-      } catch (err) {
-        console.log(err);
-        setSearchResult([]);
-        setSearchMessage('Pokémon not found!');
-        throw err;
+  const fetchPokemonData = useCallback(
+    async (pokemonName) => {
+      if (pokemonName) {
+        try {
+          const response = await getPokemonFromApi(pokemonName);
+          setSearchResult(response);
+        } catch (err) {
+          console.log(err);
+          setSearchResult([]);
+          setSearchMessage('Pokémon not found!');
+          throw err;
+        }
+      } else {
+        setLoading(true);
+        setMessage('loading');
+        const response = await getAllPokemons(1);
+        setAllPokemons(response);
+        setLoading(false);
       }
-    } else {
-      setLoading(true);
-      setMessage('loading');
-      const response = await getAllPokemons(1);
-      setAllPokemons(response);
-      setLoading(false);
-    }
-  };
+    },
+    [setAllPokemons, setSearchResult, setSearchMessage, setLoading, setMessage],
+  );
 
   // useEffect to fetch the data for all the pokemons
   useEffect(() => {
     fetchPokemonData();
-  }, []);
+  }, [fetchPokemonData]);
 
   // useEffect to handle the scroll event for the user
   useEffect(() => {
@@ -137,7 +141,7 @@ function App() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [allPokemons]);
+  }, [allPokemons, setAllPokemons, setLoading, setMessage]);
 
   return (
     <>
@@ -160,6 +164,6 @@ function App() {
       <footer></footer>
     </>
   );
-}
+};
 
-export default App;
+export default Home;
