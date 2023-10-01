@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const Search = ({ searchPokemon, value, handleSearch, handleClear }) => {
   return (
-    <div className='search flex justify-center'>
+    <div className='search flex justify-center pb-10'>
       <form action='' onSubmit={searchPokemon} className='w-full max-w-lg relative'>
         <input
           type='text'

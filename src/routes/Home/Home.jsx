@@ -110,8 +110,30 @@ const Home = () => {
   );
 
   // useEffect to fetch the data for all the pokemons
+  // useEffect(() => {
+  //   fetchPokemonData();
+  // }, [fetchPokemonData]);
+
   useEffect(() => {
-    fetchPokemonData();
+    // Function to fetch data from localStorage
+    const getSavedDataFromLocalStorage = () => {
+      try {
+        const savedData = localStorage.getItem('allPokemons');
+        if (savedData) {
+          setAllPokemons(JSON.parse(savedData));
+        }
+      } catch (error) {
+        console.error('Error retrieving data from localStorage:', error);
+      }
+    };
+
+    // Fetch data from localStorage when the component mounts
+    getSavedDataFromLocalStorage();
+
+    // Fetch initial data if it's not in localStorage
+    if (allPokemons.length === 0) {
+      fetchPokemonData();
+    }
   }, [fetchPokemonData]);
 
   // useEffect to handle the scroll event for the user
@@ -139,6 +161,16 @@ const Home = () => {
           setLoading(false);
         });
       }
+      // Save allPokemons to localStorage whenever it changes
+      try {
+        localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
+      } catch (error) {
+        console.error('Error saving data to localStorage:', error);
+      }
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
     };
 
     window.addEventListener('scroll', handleScroll);
