@@ -33,6 +33,10 @@ const PokemonProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
   const [isError, setError] = useState(false);
 
+  // state for the filter
+  const [filter, setFilter] = useState([]);
+  const [filterActive, setFilterActive] = useState('');
+
   // defining state constant
   const state = {
     allPokemons,
@@ -51,6 +55,10 @@ const PokemonProvider = ({ children }) => {
     setFavorites,
     isError,
     setError,
+    filter,
+    setFilter,
+    filterActive,
+    setFilterActive,
   };
 
   // returning passing a child prop to the component
