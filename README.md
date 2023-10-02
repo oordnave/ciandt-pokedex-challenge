@@ -41,7 +41,7 @@ To run this application locally on your machine, follow these steps:
 2. Navigate to the project directory:
 
    ```bash
-   cd pokemon-explorer-app
+   cd ciandt-pokedex-challenge
    ```
 
 3. Install project dependencies using [Node.js](https://nodejs.org/):
