@@ -233,10 +233,10 @@ const Home = () => {
 
       // for testing purpouses, verify if the length is 100
       // this code should be removed if we want the list to work properly
-      if (allPokemons.length >= 99) {
-        setMessage('Reached the end of the list!!');
-        return;
-      }
+      // if (allPokemons.length >= 99) {
+      //   setMessage('Reached the end of the list!!');
+      //   return;
+      // }
       if (
         window.innerHeight + document.documentElement.scrollTop ===
         document.documentElement.offsetHeight
