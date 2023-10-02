@@ -1,7 +1,15 @@
 // pokemon info component
 
+// components
+import Header from '../../components/blocks/Header/Header';
+
 const PokemonInfo = () => {
-  return <div>Pokemon exists</div>;
+  return (
+    <>
+      <Header />
+      <div>Pokémon Exists!</div>
+    </>
+  );
 };
 
 export default PokemonInfo;
