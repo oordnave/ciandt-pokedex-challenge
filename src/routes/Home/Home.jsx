@@ -152,6 +152,7 @@ const Home = () => {
 
   // effects
   // fetching the data and updating the states
+  // useCallback was used to persist the fuction between renders
   const fetchPokemonData = useCallback(
     async (pokemonName) => {
       if (pokemonName) {
