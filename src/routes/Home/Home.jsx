@@ -6,6 +6,7 @@ import { usePokemonContext } from '../../context/PokemonContext';
 // components
 import Header from '../../components/blocks/Header/Header';
 import Search from '../../components/blocks/Search/Search';
+import Filter from '../../components/blocks/Filter/Filter';
 import InfiniteScroll from '../../components/blocks/InfiniteScroll/InfiniteScroll';
 
 // api calls
@@ -247,6 +248,7 @@ const Home = () => {
         searchMessage={searchMessage}
         isError={isError}
       />
+      <Filter />
       <section>
         <InfiniteScroll
           allPokemons={allPokemons}
