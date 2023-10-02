@@ -27,6 +27,8 @@ const Home = () => {
     setMessage,
     isLoading,
     setLoading,
+    favorites,
+    setFavorites,
   } = usePokemonContext();
 
   // handlers
@@ -48,6 +50,35 @@ const Home = () => {
     console.log('clear');
   };
 
+  // Function to add/remove a Pokemon from favorites
+  const toggleFavorite = (pokemonName) => {
+    // declaring the variable
+    let updatedFavorites;
+
+    // verifies if the storage already have the data
+    if (favorites.includes(pokemonName)) {
+      // Remove from favorites
+      updatedFavorites = favorites.filter((name) => name !== pokemonName);
+      setFavorites(updatedFavorites);
+    } else {
+      // Add to favorites
+      updatedFavorites = [...favorites, pokemonName];
+      setFavorites(updatedFavorites);
+    }
+
+    // Save updated favorites to localStorage
+    saveFavoritesToLocalStorage(updatedFavorites);
+  };
+
+  // function to save the favorite pokémon into localStorage
+  const saveFavoritesToLocalStorage = (favorites) => {
+    try {
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    } catch (error) {
+      console.error('Error saving favorites to localStorage:', error);
+    }
+  };
+
   // handler to perform a search
   const searchPokemon = (event) => {
     // preventing the default behaviour from the form
@@ -62,7 +93,6 @@ const Home = () => {
       // conditionals if result exists, if not search in the API
       if (result) {
         console.log('pokemon found in the state: ', result);
-        setSearchMessage('pokemon found in the state');
 
         let resultArray = [];
 
@@ -71,15 +101,16 @@ const Home = () => {
         console.log(resultArray);
 
         setSearchResult(resultArray);
+        setMessage('Pokemon found!');
       } else {
         console.log('pokémon not found in stored cache, making request for the api');
-        setSearchMessage('pokémon not found in stored cache, making request for the api');
         setLoading(true);
         fetchPokemonData(search.toLowerCase());
       }
     } else {
       setSearchResult([]);
-      setSearchMessage('type something to show in search!');
+      setMessage('Type something to show in search!');
+      setSearchMessage('Type something to show in search!');
       setLoading(true);
     }
   };
@@ -92,10 +123,13 @@ const Home = () => {
         try {
           const response = await getPokemonFromApi(pokemonName);
           setSearchResult(response);
+          setMessage('Pokémon found!');
+          setMessage('Pokémon found!');
         } catch (err) {
           console.log(err);
           setSearchResult([]);
           setSearchMessage('Pokémon not found!');
+          setMessage('Pokémon not found!');
           throw err;
         }
       } else {
@@ -110,9 +144,45 @@ const Home = () => {
   );
 
   // useEffect to fetch the data for all the pokemons
+  // when the component mounts
+  // useEffect(() => {
+  //   fetchPokemonData();
+  // }, [fetchPokemonData]);
+
   useEffect(() => {
-    fetchPokemonData();
-  }, [fetchPokemonData]);
+    if (allPokemons.length === 0) {
+      fetchPokemonData();
+    }
+  }, [allPokemons, fetchPokemonData]);
+
+  // useEffect to fetch the allPokemon data from localStorage
+  useEffect(() => {
+    // Function to fetch data from localStorage
+    const getSavedDataFromLocalStorage = () => {
+      try {
+        const savedData = localStorage.getItem('allPokemons');
+        if (savedData !== null) {
+          console.log('allPokemons data in storage:', JSON.parse(savedData));
+          setAllPokemons(JSON.parse(savedData));
+        }
+      } catch (error) {
+        console.error('Error retrieving data from localStorage:', error);
+      }
+    };
+
+    // Fetch data from localStorage when the component mounts
+    getSavedDataFromLocalStorage();
+  }, [setAllPokemons]);
+
+  // Initialize favorites state from localStorage when the component mounts
+  useEffect(() => {
+    // Retrieve favorites from localStorage
+    const favoritesFromLocalStorage = localStorage.getItem('favorites');
+    if (favoritesFromLocalStorage) {
+      console.log('favorites pokemon data in storage:', favoritesFromLocalStorage);
+      setFavorites(JSON.parse(favoritesFromLocalStorage));
+    }
+  }, [setFavorites]);
 
   // useEffect to handle the scroll event for the user
   useEffect(() => {
@@ -120,8 +190,9 @@ const Home = () => {
       // verifying if scroll event is fired
       console.log('event fired!');
 
-      // for testing purpouses, verify if the length is 70
-      if (allPokemons.length > 70) {
+      // for testing purpouses, verify if the length is 100
+      // this code should be removed if we want the list to work properly
+      if (allPokemons.length >= 99) {
         setMessage('Reached the end of the list!!');
         return;
       }
@@ -139,6 +210,16 @@ const Home = () => {
           setLoading(false);
         });
       }
+      // Save allPokemons to localStorage whenever it changes
+      try {
+        localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
+      } catch (error) {
+        console.error('Error saving data to localStorage:', error);
+      }
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -164,6 +245,8 @@ const Home = () => {
           isLoading={isLoading}
           message={message}
           searchMessage={searchMessage}
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
         />
       </section>
       <footer></footer>
