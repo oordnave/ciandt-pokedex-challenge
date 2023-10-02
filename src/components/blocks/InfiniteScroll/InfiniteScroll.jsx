@@ -13,18 +13,30 @@ const InfiniteScroll = ({
   message,
   toggleFavorite,
   favorites,
+  filteredResult,
 }) => {
   // empty array to populate with the conditional
   let pokemonList = [];
 
+  // conditionals;
+  if (searchResult.length !== 0) {
+    pokemonList = searchResult;
+  } else if (filteredResult.length !== 0) {
+    pokemonList = filteredResult;
+  } else {
+    pokemonList = allPokemons;
+  }
+
+  // console.log('filteredResult from infinteScroll:', filteredResult);
+
   // conditional to switch between states
-  searchResult.length !== 0 ? (pokemonList = searchResult) : (pokemonList = allPokemons);
+  // searchResult.length !== 0 ? (pokemonList = searchResult) : (pokemonList = allPokemons);
 
   return (
     <div className='list-pokemon'>
-      <ul className='grid p-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+      <ul className='grid p-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6 gap-4 place-items-stretch'>
         {pokemonList.map((pokemon, index) => (
-          <li className='card' key={'num' + index}>
+          <li className='card h-full' key={'num' + index}>
             <div className='w-full max-w-sm bg-white border border-gray-50 rounded-lg shadow dark:bg-gray-50 dark:border-gray-200'>
               <Link
                 to={`pokemon/${index + 1}`}
@@ -45,7 +57,7 @@ const InfiniteScroll = ({
                     </p>
                   ))}
                 </div>
-                <div className='flex items-center justify-between'>
+                <div className='grid grid-cols-2'>
                   <Link
                     to={`pokemon/${index + 1}`}
                     className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
@@ -56,17 +68,15 @@ const InfiniteScroll = ({
                     href=''
                     className={
                       favorites.includes(pokemon.name)
-                        ? 'text-white ml-2 bg-red-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:be-green-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-                        : 'text-white ml-2 bg-green-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                        ? 'text-white h-full ml-2 bg-red-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:be-green-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                        : 'text-white h-full ml-2 bg-green-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
                     }
                     onClick={(e) => {
                       e.preventDefault();
                       toggleFavorite(pokemon.name);
                     }}
                   >
-                    {favorites.includes(pokemon.name)
-                      ? 'Remove from Favorites'
-                      : 'Add to Favorites'}
+                    {favorites.includes(pokemon.name) ? 'Remove Favorite' : 'Add Favorite'}
                   </a>
                 </div>
               </div>
@@ -96,6 +106,7 @@ InfiniteScroll.propTypes = {
   searchMessage: PropTypes.string,
   toggleFavorite: PropTypes.func,
   favorites: PropTypes.array,
+  filteredResult: PropTypes.array,
 };
 
 export default InfiniteScroll;

@@ -34,6 +34,7 @@ const getAllPokemons = async (length) => {
       sprite: pokemon.sprites.front_default,
       artwork: pokemon.sprites.other['official-artwork'].front_default,
       stats: pokemon.stats,
+      types: pokemon.types,
     };
   });
 };
@@ -61,7 +62,7 @@ const getPokemonFromApi = async (pokemonName) => {
       },
     ];
 
-    console.log('Array is:', resultArray);
+    console.log('Array from resultArray is:', resultArray);
 
     return resultArray;
     // handling errors
@@ -82,15 +83,11 @@ const getPokemonTypes = async () => {
     // waiting the promise to be fullfilled
     let result = await promise.json();
 
-    let resultArray = [
-      {
-        name: result.name,
-        url: result.url,
-      },
-    ];
+    // passing the results array
+    let resultArray = result.results;
 
     // printing the result
-    console.log('the result from getPokemonTypes:', result);
+    // console.log('the result from resultArray:', resultArray);
 
     return resultArray;
     // handling errors

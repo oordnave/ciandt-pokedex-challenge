@@ -10,7 +10,7 @@ import Filter from '../../components/blocks/Filter/Filter';
 import InfiniteScroll from '../../components/blocks/InfiniteScroll/InfiniteScroll';
 
 // api calls
-import { getAllPokemons, getPokemonFromApi } from '../../api/api';
+import { getAllPokemons, getPokemonFromApi, getPokemonTypes } from '../../api/api';
 
 // App component
 const Home = () => {
@@ -32,6 +32,11 @@ const Home = () => {
     setFavorites,
     isError,
     setError,
+    filter,
+    setFilter,
+    setTermToFilter,
+    filteredResult,
+    setFilteredResult,
   } = usePokemonContext();
 
   // handlers
@@ -53,6 +58,30 @@ const Home = () => {
     setSearchResult([]);
     setError(false);
     // console.log('clear');
+  };
+
+  // handle as filter
+  // const handleFilter = (name) => {
+  //   console.log('working! and the filter name is', name);
+  // };
+  //
+  const handleFilter = (filterTerm) => {
+    setTermToFilter(filterTerm); // Store the filter term in state
+    filterPokemonsByType(filterTerm); // Call the filter function with the filter term
+
+    // console.log(`filterTerm: `, filterTerm);
+  };
+
+  const filterPokemonsByType = (typeToFilter) => {
+    const filteredResults = allPokemons.filter((pokemon) => {
+      // Check if the typeToFilter exists in the types array of the pokemon
+      return pokemon.types.some((type) => type.type.name === typeToFilter);
+    });
+
+    // console.log(`typeToFilter: `, typeToFilter, `\nfiltered results:`, filteredResults);
+
+    // Update the filteredPokemons state with the filtered results
+    setFilteredResult(filteredResults);
   };
 
   // Function to add/remove a Pokemon from favorites
@@ -151,17 +180,20 @@ const Home = () => {
     [setAllPokemons, setSearchResult, setSearchMessage, setLoading, setMessage, setError],
   );
 
-  // useEffect to fetch the data for all the pokemons
-  // when the component mounts
-  // useEffect(() => {
-  //   fetchPokemonData();
-  // }, [fetchPokemonData]);
+  // function to fetch pokemon types
+  const fetchPokemonType = useCallback(async () => {
+    const response = await getPokemonTypes();
+    setFilter(response);
+  }, [setFilter]);
 
+  // useEffect which verifies the length of the state.
+  // if empty, fetch the data
   useEffect(() => {
     if (allPokemons.length === 0) {
       fetchPokemonData();
+      fetchPokemonType();
     }
-  }, [allPokemons, fetchPokemonData]);
+  }, [allPokemons, fetchPokemonData, fetchPokemonType]);
 
   // useEffect to fetch the allPokemon data from localStorage
   useEffect(() => {
@@ -170,11 +202,11 @@ const Home = () => {
       try {
         const savedData = localStorage.getItem('allPokemons');
         if (savedData !== null) {
-          console.log('allPokemons data in storage:', JSON.parse(savedData));
+          // console.log('allPokemons data in storage:', JSON.parse(savedData));
           setAllPokemons(JSON.parse(savedData));
         }
       } catch (error) {
-        console.error('Error retrieving data from localStorage:', error);
+        // console.error('Error retrieving data from localStorage:', error);
       }
     };
 
@@ -248,7 +280,7 @@ const Home = () => {
         searchMessage={searchMessage}
         isError={isError}
       />
-      <Filter />
+      <Filter filter={filter} handleFilter={handleFilter} />
       <section>
         <InfiniteScroll
           allPokemons={allPokemons}
@@ -258,6 +290,7 @@ const Home = () => {
           searchMessage={searchMessage}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
+          filteredResult={filteredResult}
         />
       </section>
       <footer></footer>

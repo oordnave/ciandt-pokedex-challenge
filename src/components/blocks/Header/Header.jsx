@@ -11,14 +11,14 @@ const Header = () => {
   // get the current location
   const currentRoute = useLocation();
 
-  console.log(
-    `the current path is:`,
-    currentRoute.pathname,
-    '\nthe current search query is:',
-    currentRoute.search,
-    `\nthe current hash is:`,
-    currentRoute.hash,
-  );
+  // console.log(
+  //   `the current path is:`,
+  //   currentRoute.pathname,
+  //   '\nthe current search query is:',
+  //   currentRoute.search,
+  //   `\nthe current hash is:`,
+  //   currentRoute.hash,
+  // );
 
   return (
     <HeaderElement>
