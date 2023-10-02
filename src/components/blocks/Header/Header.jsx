@@ -11,15 +11,6 @@ const Header = () => {
   // get the current location
   const currentRoute = useLocation();
 
-  // console.log(
-  //   `the current path is:`,
-  //   currentRoute.pathname,
-  //   '\nthe current search query is:',
-  //   currentRoute.search,
-  //   `\nthe current hash is:`,
-  //   currentRoute.hash,
-  // );
-
   return (
     <HeaderElement>
       <div className='buttons flex justify-end'>
@@ -37,13 +28,13 @@ const Header = () => {
         ) : (
           ''
         )}
-        {currentRoute.pathname !== `/` ? (
+        {/* currentRoute.pathname !== `/` ? (
           <div className='compare p-2'>
             <Link to={`/compare`}>Compare</Link>
           </div>
         ) : (
           ''
-        )}
+        )*/}
       </div>
       <Logo />
     </HeaderElement>
