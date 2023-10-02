@@ -73,6 +73,29 @@ const getPokemonFromApi = async (pokemonName) => {
   }
 };
 
+// get pokemon from the single page, passing the id
+const getPokemonFromApiById = async (pokemonId) => {
+  try {
+    // Make the request for the API by Pokemon ID
+    let promise = await fetch(POKE_URL + pokemonId);
+
+    // Check if the response status is OK (200)
+    if (!promise.ok) {
+      throw new Error(`Failed to fetch Pokémon with ID ${pokemonId}`);
+    }
+
+    // Waiting for the promise to be fulfilled
+    let result = await promise.json();
+
+    // returning the result
+    return [result];
+  } catch (error) {
+    // Error message
+    console.error(error.message);
+    throw error;
+  }
+};
+
 // get the pokemon from the search
 const getPokemonTypes = async () => {
   // try-catch block
@@ -98,4 +121,4 @@ const getPokemonTypes = async () => {
   }
 };
 
-export { getAllPokemons, getPokemonFromApi, getPokemonTypes };
+export { getAllPokemons, getPokemonFromApi, getPokemonFromApiById, getPokemonTypes };
