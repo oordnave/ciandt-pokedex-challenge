@@ -57,19 +57,11 @@ const Home = () => {
     setSearch('');
     setSearchResult([]);
     setError(false);
-    // console.log('clear');
   };
 
-  // handle as filter
-  // const handleFilter = (name) => {
-  //   console.log('working! and the filter name is', name);
-  // };
-  //
   const handleFilter = (filterTerm) => {
     setTermToFilter(filterTerm); // Store the filter term in state
     filterPokemonsByType(filterTerm); // Call the filter function with the filter term
-
-    // console.log(`filterTerm: `, filterTerm);
   };
 
   const filterPokemonsByType = (typeToFilter) => {
@@ -77,8 +69,6 @@ const Home = () => {
       // Check if the typeToFilter exists in the types array of the pokemon
       return pokemon.types.some((type) => type.type.name === typeToFilter);
     });
-
-    // console.log(`typeToFilter: `, typeToFilter, `\nfiltered results:`, filteredResults);
 
     // Update the filteredPokemons state with the filtered results
     setFilteredResult(filteredResults);
@@ -126,19 +116,13 @@ const Home = () => {
 
       // conditionals if result exists, if not search in the API
       if (result) {
-        // console.log('pokemon found in the state: ', result);
-
         let resultArray = [];
 
         resultArray.push(result);
 
-        // console.log(resultArray);
-
-        setSearchResult(resultArray);
         setMessage('Pokemon found!');
         setError(false);
       } else {
-        // console.log('pokémon not found in stored cache, making request for the api');
         setLoading(true);
         fetchPokemonData(search.toLowerCase());
       }
@@ -155,6 +139,7 @@ const Home = () => {
   // useCallback was used to persist the fuction between renders
   const fetchPokemonData = useCallback(
     async (pokemonName) => {
+      // if name exists, try to find the pokemon in the api
       if (pokemonName) {
         try {
           const response = await getPokemonFromApi(pokemonName);
@@ -163,7 +148,7 @@ const Home = () => {
           setSearchMessage('Pokémon found!');
           setError(false);
         } catch (err) {
-          // console.log(err);
+          // if not, updates the state and throw error
           setSearchResult([]);
           setMessage('Pokémon not found!');
           setSearchMessage('Pokémon not found!');
@@ -171,6 +156,7 @@ const Home = () => {
           throw err;
         }
       } else {
+        // if name is empty, get all pokemons
         setLoading(true);
         setMessage('Loading');
         const response = await getAllPokemons(1);
@@ -200,14 +186,9 @@ const Home = () => {
   useEffect(() => {
     // Function to fetch data from localStorage
     const getSavedDataFromLocalStorage = () => {
-      try {
-        const savedData = localStorage.getItem('allPokemons');
-        if (savedData !== null) {
-          // console.log('allPokemons data in storage:', JSON.parse(savedData));
-          setAllPokemons(JSON.parse(savedData));
-        }
-      } catch (error) {
-        // console.error('Error retrieving data from localStorage:', error);
+      const savedData = localStorage.getItem('allPokemons');
+      if (savedData !== null) {
+        setAllPokemons(JSON.parse(savedData));
       }
     };
 
@@ -220,7 +201,6 @@ const Home = () => {
     // Retrieve favorites from localStorage
     const favoritesFromLocalStorage = localStorage.getItem('favorites');
     if (favoritesFromLocalStorage) {
-      // console.log('favorites pokemon data in storage:', favoritesFromLocalStorage);
       setFavorites(JSON.parse(favoritesFromLocalStorage));
     }
   }, [setFavorites]);
@@ -228,9 +208,6 @@ const Home = () => {
   // useEffect to handle the scroll event for the user
   useEffect(() => {
     const handleScroll = () => {
-      // verifying if scroll event is fired
-      // console.log('event fired!');
-
       // for testing purpouses, verify if the length is 100
       // this code should be removed if we want the list to work properly
       if (allPokemons.length >= 99) {
