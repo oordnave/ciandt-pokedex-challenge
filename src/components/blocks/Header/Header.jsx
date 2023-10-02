@@ -32,14 +32,14 @@ const Header = () => {
         )}
         {currentRoute.pathname !== `/favorites` ? (
           <div className='favorites p-2'>
-            <Link to={`/`}>Favorites</Link>
+            <Link to={`/favorites`}>Favorites</Link>
           </div>
         ) : (
           ''
         )}
         {currentRoute.pathname !== `/` ? (
           <div className='compare p-2'>
-            <Link to={`/`}>Compare</Link>
+            <Link to={`/compare`}>Compare</Link>
           </div>
         ) : (
           ''
