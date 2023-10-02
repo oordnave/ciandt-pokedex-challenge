@@ -36,6 +36,7 @@ const getAllPokemons = async (length) => {
     };
   });
 };
+//
 
 // get the pokemon from the search
 const getPokemonFromApi = async (pokemonName) => {

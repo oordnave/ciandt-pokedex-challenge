@@ -29,6 +29,9 @@ const PokemonProvider = ({ children }) => {
   const [message, setMessage] = useState('');
   const [isLoading, setLoading] = useState(true);
 
+  // state for favorites
+  const [favorites, setFavorites] = useState([]);
+
   // defining state constant
   const state = {
     allPokemons,
@@ -43,6 +46,8 @@ const PokemonProvider = ({ children }) => {
     setMessage,
     isLoading,
     setLoading,
+    favorites,
+    setFavorites,
   };
 
   // returning passing a child prop to the component
