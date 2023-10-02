@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 // importing components
 import Home from './Home/Home';
 import Favorites from './Favorites/Favorites';
-import Compare from './Compare/Compare';
 import PokemonInfo from './PokemonInfo/PokemonInfo';
 
 const router = createBrowserRouter([
@@ -18,7 +17,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/compare',
-    element: <Compare />,
+    element: <Navigate to='/' />,
   },
   {
     path: '/pokemon',
