@@ -54,7 +54,11 @@ const InfiniteScroll = ({
                   </Link>
                   <a
                     href=''
-                    className='text-white ml-2 bg-green-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                    className={
+                      favorites.includes(pokemon.name)
+                        ? 'text-white ml-2 bg-red-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:be-green-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                        : 'text-white ml-2 bg-green-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                    }
                     onClick={(e) => {
                       e.preventDefault();
                       toggleFavorite(pokemon.name);
@@ -70,15 +74,16 @@ const InfiniteScroll = ({
           </li>
         ))}
       </ul>
-      {isLoading ? (
-        <div className='pokemonName text-center p-14 text-4xl font-bold text-white bg-green-400'>
-          {message}
-        </div>
-      ) : (
-        <div className='pokemonName text-center p-14 text-4xl font-bold text-white bg-red-400'>
-          {message}
-        </div>
-      )}
+      {isLoading ? <p>{message}</p> : <p>{message}</p>}
+      <div
+        className={
+          isLoading
+            ? 'pokemonName text-center p-14 text-4xl font-bold text-white bg-green-400'
+            : 'pokemonName text-center p-14 text-4xl font-bold text-white bg-red-400'
+        }
+      >
+        {message}
+      </div>
     </div>
   );
 };
