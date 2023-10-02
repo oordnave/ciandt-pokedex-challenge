@@ -24,10 +24,18 @@ const Header = () => {
     <HeaderElement>
       <div className='buttons flex justify-end'>
         <div className='favorites p-2'>
-          <Link to={`/favorites`}>Favorites</Link>
+          {currentRoute.pathname === `/favorites` ? (
+            <Link to={`/`}>Return to Home</Link>
+          ) : (
+            <Link to={`/favorites`}>Favorites</Link>
+          )}
         </div>
         <div className='compare p-2'>
-          <Link to={`/compare`}>Compare</Link>
+          {currentRoute.pathname === `/compare` ? (
+            <Link to={`/`}>Return to Home</Link>
+          ) : (
+            <Link to={`/compare`}>Compare</Link>
+          )}
         </div>
       </div>
       <Logo />

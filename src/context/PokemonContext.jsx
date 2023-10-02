@@ -31,6 +31,7 @@ const PokemonProvider = ({ children }) => {
 
   // state for favorites
   const [favorites, setFavorites] = useState([]);
+  const [isError, setError] = useState(false);
 
   // defining state constant
   const state = {
@@ -48,6 +49,8 @@ const PokemonProvider = ({ children }) => {
     setLoading,
     favorites,
     setFavorites,
+    isError,
+    setError,
   };
 
   // returning passing a child prop to the component

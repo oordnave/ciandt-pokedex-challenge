@@ -29,6 +29,8 @@ const Home = () => {
     setLoading,
     favorites,
     setFavorites,
+    isError,
+    setError,
   } = usePokemonContext();
 
   // handlers
@@ -40,6 +42,7 @@ const Home = () => {
     } else {
       setSearch('');
       setSearchResult([]);
+      setError(false);
     }
   };
 
@@ -47,7 +50,8 @@ const Home = () => {
   const handleClear = () => {
     setSearch('');
     setSearchResult([]);
-    console.log('clear');
+    setError(false);
+    // console.log('clear');
   };
 
   // Function to add/remove a Pokemon from favorites
@@ -92,18 +96,19 @@ const Home = () => {
 
       // conditionals if result exists, if not search in the API
       if (result) {
-        console.log('pokemon found in the state: ', result);
+        // console.log('pokemon found in the state: ', result);
 
         let resultArray = [];
 
         resultArray.push(result);
 
-        console.log(resultArray);
+        // console.log(resultArray);
 
         setSearchResult(resultArray);
         setMessage('Pokemon found!');
+        setError(true);
       } else {
-        console.log('pokémon not found in stored cache, making request for the api');
+        // console.log('pokémon not found in stored cache, making request for the api');
         setLoading(true);
         fetchPokemonData(search.toLowerCase());
       }
@@ -124,23 +129,25 @@ const Home = () => {
           const response = await getPokemonFromApi(pokemonName);
           setSearchResult(response);
           setMessage('Pokémon found!');
-          setMessage('Pokémon found!');
+          setSearchMessage('Pokémon found!');
+          setError(false);
         } catch (err) {
-          console.log(err);
+          // console.log(err);
           setSearchResult([]);
-          setSearchMessage('Pokémon not found!');
           setMessage('Pokémon not found!');
+          setSearchMessage('Pokémon not found!');
+          setError(true);
           throw err;
         }
       } else {
         setLoading(true);
-        setMessage('loading');
+        setMessage('Loading');
         const response = await getAllPokemons(1);
         setAllPokemons(response);
         setLoading(false);
       }
     },
-    [setAllPokemons, setSearchResult, setSearchMessage, setLoading, setMessage],
+    [setAllPokemons, setSearchResult, setSearchMessage, setLoading, setMessage, setError],
   );
 
   // useEffect to fetch the data for all the pokemons
@@ -179,7 +186,7 @@ const Home = () => {
     // Retrieve favorites from localStorage
     const favoritesFromLocalStorage = localStorage.getItem('favorites');
     if (favoritesFromLocalStorage) {
-      console.log('favorites pokemon data in storage:', favoritesFromLocalStorage);
+      // console.log('favorites pokemon data in storage:', favoritesFromLocalStorage);
       setFavorites(JSON.parse(favoritesFromLocalStorage));
     }
   }, [setFavorites]);
@@ -188,7 +195,7 @@ const Home = () => {
   useEffect(() => {
     const handleScroll = () => {
       // verifying if scroll event is fired
-      console.log('event fired!');
+      // console.log('event fired!');
 
       // for testing purpouses, verify if the length is 100
       // this code should be removed if we want the list to work properly
@@ -237,6 +244,8 @@ const Home = () => {
         value={search}
         handleSearch={handleSearch}
         handleClear={handleClear}
+        searchMessage={searchMessage}
+        isError={isError}
       />
       <section>
         <InfiniteScroll

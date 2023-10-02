@@ -9,7 +9,7 @@ const Favorites = () => {
     <>
       <Header />
       <div>Favorites</div>
-      <Link to={`/`}>Back to home</Link>
+      <Link to={`/`}>Return to home</Link>
     </>
   );
 };
