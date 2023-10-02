@@ -2,6 +2,7 @@
 
 // declaring constants
 const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/';
+const POKE_URL_TYPES = 'https://pokeapi.co/api/v2/type/';
 
 // get all the pokemon data
 const getAllPokemons = async (length) => {
@@ -33,6 +34,7 @@ const getAllPokemons = async (length) => {
       sprite: pokemon.sprites.front_default,
       artwork: pokemon.sprites.other['official-artwork'].front_default,
       stats: pokemon.stats,
+      types: pokemon.types,
     };
   });
 };
@@ -60,7 +62,7 @@ const getPokemonFromApi = async (pokemonName) => {
       },
     ];
 
-    console.log('Array is:', resultArray);
+    console.log('Array from resultArray is:', resultArray);
 
     return resultArray;
     // handling errors
@@ -71,4 +73,29 @@ const getPokemonFromApi = async (pokemonName) => {
   }
 };
 
-export { getAllPokemons, getPokemonFromApi };
+// get the pokemon from the search
+const getPokemonTypes = async () => {
+  // try-catch block
+  try {
+    // make the request for the api by pokemon name
+    let promise = await fetch(POKE_URL_TYPES);
+
+    // waiting the promise to be fullfilled
+    let result = await promise.json();
+
+    // passing the results array
+    let resultArray = result.results;
+
+    // printing the result
+    // console.log('the result from resultArray:', resultArray);
+
+    return resultArray;
+    // handling errors
+  } catch (error) {
+    // error message
+    console.log(error.message);
+    throw error;
+  }
+};
+
+export { getAllPokemons, getPokemonFromApi, getPokemonTypes };
