@@ -2,6 +2,7 @@
 
 // declaring constants
 const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/';
+const POKE_URL_TYPES = 'https://pokeapi.co/api/v2/type/';
 
 // get all the pokemon data
 const getAllPokemons = async (length) => {
@@ -71,4 +72,33 @@ const getPokemonFromApi = async (pokemonName) => {
   }
 };
 
-export { getAllPokemons, getPokemonFromApi };
+// get the pokemon from the search
+const getPokemonTypes = async () => {
+  // try-catch block
+  try {
+    // make the request for the api by pokemon name
+    let promise = await fetch(POKE_URL_TYPES);
+
+    // waiting the promise to be fullfilled
+    let result = await promise.json();
+
+    let resultArray = [
+      {
+        name: result.name,
+        url: result.url,
+      },
+    ];
+
+    // printing the result
+    console.log('the result from getPokemonTypes:', result);
+
+    return resultArray;
+    // handling errors
+  } catch (error) {
+    // error message
+    console.log(error.message);
+    throw error;
+  }
+};
+
+export { getAllPokemons, getPokemonFromApi, getPokemonTypes };
