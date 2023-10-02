@@ -106,7 +106,7 @@ const Home = () => {
 
         setSearchResult(resultArray);
         setMessage('Pokemon found!');
-        setError(true);
+        setError(false);
       } else {
         // console.log('pokémon not found in stored cache, making request for the api');
         setLoading(true);
