@@ -1,5 +1,8 @@
 # Pokédex App
 
+  ___Copy and Use this link in the .markdown file___  
+  ``![image text](https://cloud.githubusercontent.com/assets/711743/25648417/57cd2c0c-2fe9-11e7-8753-b60ea2656faf.png)``
+
 ``[Simple Pokémon App](https://cloud.githubusercontent.com/assets/711743/25648417/57cd2c0c-2fe9-11e7-8753-b60ea2656faf.png)``
 
 Welcome to the Pokédex App! This React-based web application allows you to explore and discover information about all your favorite Pokémon from the PokéApi. With a user-friendly interface and several exciting features, you can filter Pokémon by their types, search for specific monsters, view detailed information about each Pokémon, and even save your favorite ones to your LocalStorage.
