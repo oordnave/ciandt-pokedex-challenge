@@ -74,7 +74,6 @@ const InfiniteScroll = ({
           </li>
         ))}
       </ul>
-      {isLoading ? <p>{message}</p> : <p>{message}</p>}
       <div
         className={
           isLoading
